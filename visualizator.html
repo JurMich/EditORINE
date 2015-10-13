@@ -1,0 +1,33 @@
+<!-- This is a graphical editor and visualizator allowing to draw a graph then
+ output it as a peptide in NOR format,  as well as generating a graph from
+ NOR. This program uses D3JS (http://d3js.org/) and jQuery (https://jquery.com/).
+ 
+ Author: Juraj Michalik, 2015
+ License : GNU Affero General Public License 3 -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        	<title>NORINE Visualizator</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="NORditor.css">
+	</head>
+	<body>
+		<script src="datas.js"></script>
+		<script src="NORditor_colorize.js"></script>
+		<script src="NORditor_supfunc_all.js"></script>
+		<script src="NORditor_create_base.js"></script>
+		<script src="NORditor_import.js"></script>
+		<script src="NORditor_layout_specific.js"></script>
+		<script src="NORditor_main_visualizator.js"></script>
+		<script>
+ 			var testDiv = document.createElement('div');  
+			testDiv.id = 'first_editor';
+			document.body.appendChild(testDiv);
+			visualizeMonomer('Ac-Aib,Ala,X,X,X@4,1@0,2@1,3@2,4@3,0', 'first_editor', 'svg1');
+
+		</script>
+	</body>
+</html> 

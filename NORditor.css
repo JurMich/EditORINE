@@ -1,0 +1,173 @@
+/* This is a graphical editor and visualizator allowing to draw a graph then
+ * output it as a peptide in NOR format,  as well as generating a graph from
+ * NOR. This program uses D3JS (http://d3js.org/) and jQuery (https://jquery.com/).
+ *
+ * Author: Juraj Michalik, 2015
+ * License : GNU Affero General Public License 3 
+ */
+ 
+ /* Stylesheet for both editor and visualizer. 
+*/
+
+div.svg_window{
+	border:2px solid;
+	float:right;
+	margin:auto;
+	background-color: #f6fbfc;
+}
+
+div.editor_left_block{
+	float: none;
+	overflow:hidden;
+}
+
+div.menuDiv{
+	height:452px;
+	overflow-x:hidden;
+	overflow-y:scroll;
+	border:2px solid;
+	/*font-size:80%;*/
+	float:none;
+	margin:auto;
+}
+
+.editor_search_field{
+	width:97%;
+	height: 100%;
+	overflow: hidden;
+	border:2px solid;
+}
+
+.editor_active_monomers{
+	width:100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.active_monomers_field{
+	width: 60%;
+	height: 100%;
+	overflow: hidden;
+	border:2px solid;
+	float: left;
+}
+
+.editor_clear_monomers{
+	width: 36%;
+	height: 100%;
+	overflow: hidden;
+}
+
+div.editor_main_window{
+	width:700px;
+	height:500px;
+}
+
+#first_editor{
+	width:700px;
+	background-color: #dddddd; 
+}
+
+#second_editor{
+	width:700px;
+	background-color: #dddddd; 
+}
+
+div.editor_convertBar{
+	float:right;
+}
+
+div.editor_clear_redraw{
+	float: none;	
+	margin-left:4%;
+}
+
+ul.editor_menuItem{
+	list-style-type: none;
+	padding-left: 0px;
+	word-wrap: break-word;
+}
+
+p.editor_menuItem{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	background-color: #dddddd;
+	background: linear-gradient(#eeeeee, #dcdcdc);
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-size:14px;
+}
+
+li.editor_menuItem{
+	list-style-type: none;	
+}
+
+/*specific cases : basebackground*/
+#monomer_menu>li>p.editor_menuItem{
+	background: linear-gradient(#888888, #767676);
+}
+
+#monomer_menu>li>ul>li>p.editor_menuItem{
+	background: linear-gradient(#aaaaaa, #989898);
+}
+
+#monomer_menu>li>ul>li>ul>li>p.editor_menuItem{
+	background: linear-gradient(#cccccc, #bababa);
+}
+
+p.editor_menuItem:hover{
+	background-color: yellow;
+	background: linear-gradient(orange, yellow);
+}
+
+/*specific cases : mouseover*/
+#monomer_menu>li>p.editor_menuItem:hover{
+	background: linear-gradient(orange, yellow);
+}
+
+#monomer_menu>li>ul>li>p.editor_menuItem:hover{
+	background: linear-gradient(orange, yellow);
+}
+
+#monomer_menu>li>ul>li>ul>li>p.editor_menuItem:hover{
+	background: linear-gradient(orange, yellow);
+}
+
+p.editor_menuItemSelected{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	background-color: #ff6666;
+	background: linear-gradient(#ff0000, #ff6666);
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-size:14px;
+}
+
+/*specific cases : selected item*/
+#monomer_menu>li>p.editor_menuItemSelected{
+	background: linear-gradient(#990000, #996666);
+}
+
+#monomer_menu>li>ul>li>p.editor_menuItemSelected{
+	background: linear-gradient(#bb0000, #bb6666);
+}
+
+#monomer_menu>li>ul>li>ul>li>p.editor_menuItemSelected{
+	background: linear-gradient(#dd0000, #dd6666);
+}
+
+/*remove free space at top and ad bottom of list*/
+#monomer_menu{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+text{
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}

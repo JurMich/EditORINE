@@ -1,0 +1,74 @@
+<!-- This is a graphical editor and visualizator allowing to draw a graph then
+ output it as a peptide in NOR format,  as well as generating a graph from
+ NOR. This program uses D3JS (http://d3js.org/) and jQuery (https://jquery.com/).
+ 
+ Author: Juraj Michalik, 2015
+ License : GNU Affero General Public License 3 -->
+ 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+        	<title>NORINE Editor</title>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="NORditor.css">
+	</head>
+	<body>
+		<script src="datas.js"></script>
+		<script src="NORditor_menu.js"></script>
+		<script src="NORditor_supfunc_all.js"></script>
+        <script src="NORditor_supfunc_editor.js"></script>
+		<script src="NORditor_move.js"></script>
+		<script src="NORditor_create_base.js"></script>
+        <script src="NORditor_create_actions.js"></script>
+        <script src="NORditor_edgefunc.js"></script>
+		<script src="NORditor_import.js"></script>
+        <script src="NORditor_layout_specific.js"></script>
+		<script src="NORditor_main_editor.js"></script>
+		<script>
+			var testOption = document.createElement('div');  
+ 			var testForm = document.createElement('FORM');     
+ 			var testField = document.createElement('input');
+			var testButton = document.createElement('button');
+			testButton.innerHTML = 'Open Editor';
+			testField.onkeydown = function(){
+				testField.style.cssText='background-color:#ffffff;';
+			};
+			testForm.setAttribute('onsubmit', 'return false');
+			testForm.appendChild(testButton);
+                        testForm.appendChild(testField);
+			testOption.appendChild(testForm);
+ 			testOption.style.cssText = 'height:50px;width:900px;text-align:center;';
+			document.body.appendChild(testOption);
+			var testDiv = document.createElement('div');  
+			testField.id = 'first_input';			
+			testButton.id = 'first_button';
+			testDiv.id = 'first_editor';
+			document.body.appendChild(testDiv);
+			runNOREditor('first_input', 'first_button', 'first_editor', 'svg1');
+
+ 			var testOption2 = document.createElement('div');  
+ 			var testForm2 = document.createElement('FORM');     
+ 			var testField2 = document.createElement('input');
+			var testButton2 = document.createElement('button');
+			testButton2.innerHTML = 'Open Editor';
+			testField2.onkeydown = function(){
+				testField2.style.cssText='background-color:#ffffff;';
+			};
+			testForm2.setAttribute('onsubmit', 'return false');
+			testForm2.appendChild(testButton2);
+                        testForm2.appendChild(testField2);
+			testOption2.appendChild(testForm2);
+ 			testOption2.style.cssText = 'height:50px;width:900px;text-align:center;';
+			document.body.appendChild(testOption2);
+			var testDiv2 = document.createElement('div');  
+			testField2.id = 'second_input';
+ 			testButton2.id = 'second_button';
+			testDiv2.id = 'second_editor';
+			document.body.appendChild(testDiv2);
+			runNOREditor('second_input', 'second_button', 'second_editor', 'svg2');
+		</script>
+	</body>
+</html> 
