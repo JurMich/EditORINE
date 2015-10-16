@@ -13,7 +13,8 @@ div.svg_window{
 	border:2px solid;
 	float:right;
 	margin:auto;
-	background-color: #f6fbfc;
+	width:500px;
+	height:500px;
 }
 
 div.editor_left_block{
@@ -79,7 +80,6 @@ div.editor_convertBar{
 
 div.editor_clear_redraw{
 	float: none;	
-	margin-left:4%;
 }
 
 ul.editor_menuItem{
@@ -99,6 +99,20 @@ p.editor_menuItem{
 	background: linear-gradient(#eeeeee, #dcdcdc);
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size:14px;
+}
+
+a.anchor_button{
+	appearance: button;
+    -moz-appearance: button;
+    -webkit-appearance: button;
+    text-decoration: none; font: menu; color: ButtonText;
+    display: inline-block; padding: 2px 8px;
+    text-align:center;
+    width:128px;
+}
+
+a.anchor_button:active{
+	/*border-color: ButtonShadow ButtonHighlight ButtonHighlight ButtonShadow;*/
 }
 
 li.editor_menuItem{
@@ -170,4 +184,10 @@ p.editor_menuItemSelected{
 
 text{
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+/*style on window that opens after click on editor*/
+h1.image_window_msg{
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-size:15px;
 }

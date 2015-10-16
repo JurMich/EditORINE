@@ -16,16 +16,19 @@
  | 1.) Introduction /
  #-----------------#  
 
-EditORINE is an program allowing to draw a graph then translate it into
-a format NOR (see point 2). It also allows to draw a peptide entered in
+EditORINE is a program allowing to draw a graph then translate it into
+a format NOR (see point 3). It also allows to draw a peptide entered in
 format NOR. A separate visualizer allows to show an image of peptide
 passed in parameter in format NOR. Both visualizer and editor have two 
 dependencies:
 
 - jQuery 1.11.0  - https://jquery.com/
-- D3JS - http://d3js.org/
+- D3JS 3.5.6 - http://d3js.org/
+- canvg - https://github.com/gabelerner/canvg
 
 The project is under Affero General Public License 3. Author : Juraj Michalik
+As for the dependencies, they are under either MIT (jQuery 1.11.0, canvg) or
+BSD 3-Clause (D3JS 3.5.6) license.
 
  #--------------------#
  | 2.) Compatibility /
@@ -81,7 +84,7 @@ In 'NORditor_main_editor.js', it should be at line 176 - 177 (closing tag
 '});' at 180) and in 'NORditor_main_visualizator.js', line 108 - 109 
 (closing tag at 112). Remove the lines along with the closing tag.
 
-3.) Run editor at the server
+3.) Run editor at the server:
 Simply place your 'monomers.json' file in data directory of your site and
 replace 'monomers.json' in 
 'd3.json('monomers.json', function(jsonContents){' in 
@@ -91,7 +94,16 @@ adress/path to the file on your site.
 Editor/Visualizer can be tested using simple .html classes included.
 
 To implement visualizer, you need to create a div first with specific ID,
-which will serve as a container, then include these files into the page:
+which will serve as a container, then include these libraries into the 
+page (or you can download them on their respective pages and include them 
+directly):
+
+-	https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js
+-	https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
+-	http://gabelerner.github.io/canvg/rgbcolor.js
+-	http://gabelerner.github.io/canvg/canvg.js
+
+Then include these files into the page:
 
 -	"datas.js" (only if you copied contents of monomers.json in it)
 -	"NORditor_colorize.js"
@@ -101,7 +113,7 @@ which will serve as a container, then include these files into the page:
 -	"NORditor_layout_specific.js"
 -	"NORditor_main_visualizator.js"
 
-then call this function in your script: 
+Fianlly call this function in your script: 
 
 visualizeMonomer(NOR, divID, svgID);
 
@@ -110,10 +122,19 @@ divID being the ID of div created and svgID is an ID that the svg will have
 once created (just pass unique string; svg is created by the function). 
 
 
-To implement visualizer, you need to create a div first with specific ID,
+To implement the editor, you need to create a div first with specific ID,
 which will serve as a container, but in plus, you have to have an input 
 field with a specific ID where the resulting format NOR will be printed 
-once the editor is closed, as well as button to open it. Then include:
+once the editor is closed, as well as button to open it. Then include 
+these libraries into the page (or you can download them on their respective 
+pages and include them directly):
+
+-	https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js
+-	https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js
+-	http://gabelerner.github.io/canvg/rgbcolor.js
+-	http://gabelerner.github.io/canvg/canvg.js
+
+Then include these files into the page:
 
 -	"datas.js" (only if you copied contents of monomers.json in it)
 -	"NORditor_menu.js"
@@ -127,8 +148,7 @@ once the editor is closed, as well as button to open it. Then include:
 -	"NORditor_layout_specific.js"
 -	"NORditor_main_editor.js"
 
-
-then call this function in your script: 
+Finally call this function in your script: 
 
 runNOREditor(inputID, buttonID, divID, svgID);
 

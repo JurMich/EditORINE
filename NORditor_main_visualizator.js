@@ -99,6 +99,9 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
 
  /* svg has not z-index and alements are ordered by drawing order.
  Thus we create layer with edges and on top of it, layer with nodes - monomers. */
+ var background = d3.select('#'+interfaceElem.svgId).append('rect').attr('width', graphicAtt.svgWidth)
+  .attr('height', graphicAtt.svgHeight)
+  .style('fill', 'rgb(255, 255, 255)');
  var edgeLayer = d3.select('#' + svgId)
   .append('g').attr('class', 'edgeLayer');		// lower layer (nodes)
  var nodeLayer = d3.select('#' + svgId)
@@ -118,6 +121,31 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
  };
  parentDiv.appendChild(redrawButton);
+ var outputButton = document.createElement('button');
+ outputButton.setAttribute('type', 'button');
+ outputButton.style.width = '150px';
+ outputButton.innerHTML = 'Show .png image';
+ //outputButton.className = 'anchor_button';
+ outputButton.onclick=function()
+ {
+  var imgWindow = window.open('','_blank', 'width=720, height='+(graphicAtt.svgHeight+80)); 
+  var canv = document.createElement('canvas');
+  canv.width = graphicAtt.svgWidth;
+  canv.height = graphicAtt.svgHeight;
+   
+  var svg_str = (new XMLSerializer()).serializeToString(svg);
+  canvg(canv, svg_str);
+  // if download attribute on anchor is supported
+  if(typeof document.createElement('a').download != "undefined")
+  {
+   createImagePageAnchor(imgWindow, graphicAtt.svgWidth, graphicAtt.svgHeight, canv)
+  }
+  else
+  {
+   createImagePage(imgWindow, graphicAtt.svgWidth, graphicAtt.svgHeight, canv)
+  } 
+ } 
+ parentDiv.appendChild(outputButton);
 }
 
 /*

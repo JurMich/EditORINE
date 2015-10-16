@@ -629,8 +629,7 @@ function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem)
  }
  else if(peptideType == 'linear')
  {
-  nodeCoordinates =  computeNodesLinear(allMonomerLists, graphicAtt.editor, 4, graphicAtt.svgWidth, graphicAtt.svgHeight, 
-   graphicAtt.paddingX, graphicAtt.paddingY, graphicAtt.verticalLimit, interfaceElem.svgId);
+  nodeCoordinates =  computeNodesLinear(allMonomerLists, 4, graphicAtt, interfaceElem.svgId);
  }
  else if(peptideType == 'single cycle')
  {

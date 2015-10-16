@@ -83,7 +83,12 @@ function addMonomer(cursorX, cursorY, menuAtts, allMonomerLists, graphicAtt, int
 
  // obtain list of colors which will be used
  var colorPalette = menuAtts.dragged ? [graphicAtt.colorDragged] : graphicAtt.color;
- allMonomerLists.color.push(colorPalette);	
+ allMonomerLists.color.push([]);
+ // prevent pointer copying
+ for(var i=0; i<colorPalette.length; i++)
+ {
+  allMonomerLists.color[allMonomerLists.color.length-1][i] = colorPalette[i];
+ }	
  var monomer = createMonomerBase(cursorX, cursorY, menuAtts.activeMonomer, allMonomerLists, graphicAtt, interfaceElem.svgId);
  
  createMonomerActions(monomer, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
@@ -181,7 +186,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   .style('stroke', 'rgb(255, 0, 0)');
 
  // create event deleting monomer if clicked
- deleteGroup.on('click', function(){
+ deleteGroup.on('mousedown', function(){
   d3.event.stopPropagation();
 
   var nodeNumber = d3.select(this.parentNode).attr('id').split('_')[1];

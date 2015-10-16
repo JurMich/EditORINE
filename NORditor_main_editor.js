@@ -186,8 +186,7 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
  //. div containing svg
  var svgDiv = document.createElement('div');
  svgDiv.className = 'svg_window'; 
- svgDiv.style.cssText = 'width:'+graphicAtt.svgWidth+
-  'px;height:'+graphicAtt.svgHeight+'px;'; 
+ svgDiv.style.Height = graphicAtt.svgHeight;
  editorDiv.appendChild(svgDiv);
  svgDiv.style.cssText = 'display:auto;';
  
@@ -236,6 +235,9 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
  
  /* svg has not z-index and alements are ordered by drawing order.
  Thus we create layer with edges and on top of it, layer with nodes - monomers. */
+ var background = d3.select('#'+interfaceElem.svgId).append('rect').attr('width', graphicAtt.svgWidth)
+  .attr('height', graphicAtt.svgHeight)
+  .style('fill', 'rgb(246, 251, 252)');
  var edgeLayer = d3.select('#'+interfaceElem.svgId).append('g').attr('class', 'edgeLayer'); // lower layer (nodes)
  var nodeLayer = d3.select('#'+interfaceElem.svgId).append('g').attr('class', 'nodeLayer'); // will be rendered later, so positionned on top
 
@@ -290,12 +292,15 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
 
  var clearButtonDiv = document.createElement('div');
  clearButtonDiv.className = 'editor_clear_redraw';
+ clearButtonDiv.style.cssText = 'height:25px;width:97%;text-align:none;margin-left:3%';
  container.appendChild(clearButtonDiv);	
 
  // adds button to refresh a layout
  var refreshDiv = document.createElement('div');	
+ refreshDiv.style = 'height:30px;width:150px;';
  var refreshButton = document.createElement('button');	// button which starts import action
  refreshButton.innerHTML = 'Redraw';
+ refreshButton.style.width = '75px';
  refreshButton.setAttribute('type', 'button');
  refreshButton.onclick = function()
  {
@@ -305,6 +310,7 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
  var resetButton = document.createElement('button');	// button which starts import action
  resetButton.innerHTML = 'Clear';
  resetButton.setAttribute('type', 'button');
+ resetButton.style.width = '75px';
  resetButton.onclick = function()
  {
   clear(menuAtts, allMonomerLists, graphicAtt, interfaceElem);
@@ -321,6 +327,39 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
  {
   parentDiv.style.display ='block';
   importGraph(exterNORField, exterNORField.value, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList);
-
  };
+ 
+ // adds button to save current image
+ var IOdiv = document.createElement('div');	
+ IOdiv.style.cssText = 'height:25px;width:97%;margin-left:3%';
+ var outputButton = document.createElement('button');
+ outputButton.setAttribute('type', 'button');
+ outputButton.style.width = '150px';
+ outputButton.innerHTML = 'Show .png image';
+ //outputButton.className = 'anchor_button';
+ outputButton.onclick=function()
+ {
+  var imgWindow = window.open('','_blank', 'width=520, height=580'); 
+  var canv = document.createElement('canvas');
+  canv.width = graphicAtt.svgWidth;
+  canv.height = graphicAtt.svgHeight;
+   
+  var svg_str = (new XMLSerializer()).serializeToString(svg);
+  canvg(canv, svg_str);
+  // if download attribute on anchor is supported
+  if(typeof document.createElement('a').download != "undefined")
+  {
+   createImagePageAnchor(imgWindow, graphicAtt.svgWidth, graphicAtt.svgHeight, canv)
+  }
+  else
+  {
+   createImagePage(imgWindow, graphicAtt.svgWidth, graphicAtt.svgHeight, canv)
+  } 
+ } 
+ IOdiv.appendChild(outputButton);
+ container.appendChild(IOdiv);
+ 
+ var emptyDiv2 = document.createElement('div');	
+ emptyDiv2.style.cssText = 'height:12px;width:700px;text-align:center;';
+ container.appendChild(emptyDiv2);
 }

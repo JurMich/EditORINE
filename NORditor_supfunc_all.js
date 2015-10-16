@@ -94,6 +94,28 @@ function findDuplicates(array)
  return [listOfValues, bindCount];
 }
 
+// ------------------ html generator ------------------
+// generates html page with single image as link for new output
+function createImagePageAnchor(imgWindow, width, height, canvas)
+{
+ imgWindow.document.write("<!DOCTYPE><html lang='en'><head><title>Editor Output</title>"
+ +"<link rel='stylesheet' type='text/css' href='NORditor.css'></head><body><a href='"+
+ canvas.toDataURL('image/png')+"' download='Graph_save.png'> <img width='"+width+"' height='"+
+ height+"' src='"+canvas.toDataURL('image/png')+"'> </a>"+
+ "<br><h1 class='image_window_msg'>To save the image in '.png' format, just click on it!</h1></body></html>");
+ imgWindow.document.close();	
+}
+
+// same but without anchor (simple image for MSIE and Safari purposes)
+function createImagePage(imgWindow, width, height, canvas)
+{
+ imgWindow.document.write("<!DOCTYPE><html lang='en'><head><title>Editor Output</title>"
+ +"<link rel='stylesheet' type='text/css' href='NORditor.css'></head><body><img width='"
+ +width+"' height='"+height+"' src='"+canvas.toDataURL('image/png')+"'>"+
+ "<br><h1 class='image_window_msg'>To save the image in '.png' format, right-click on it then choose 'Save Picture As'!</h1></body></html>");
+ imgWindow.document.close();	
+}
+
 // ------------------ MSIE detection ------------------
 
 // detects the if user uses ie and what version

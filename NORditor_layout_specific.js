@@ -91,7 +91,7 @@ if calculated value is lower (ie. too many monomers).
  returns list of coordinates for every point.
 */
 
-function computeNodesLinear(allMonomerLists, editor, maxNptsL, width, height, paddingX, paddingY, verticalLimit, svgId)
+function computeNodesLinear(allMonomerLists, maxNptsL, graphicAtt, svgId)
 {
  // get number of first node
  var actualNode = getStartOfLinearPeptide(allMonomerLists);
@@ -106,7 +106,7 @@ function computeNodesLinear(allMonomerLists, editor, maxNptsL, width, height, pa
  var count = 0; // number of monomers treated
  var nrows = Math.ceil(allMonomerLists.monomerList.length/maxNptsL); // number of rows of monomers to draw
  // horizontal space between monomers
- var horizontalSpace = parseInt((width-paddingX*2)/(maxNptsL-1));
+ var horizontalSpace = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(maxNptsL-1));
  var verticalSpace;  // vertical space between monomers
  var xNode;          // coordinate x for node
  var yNode;          // coordinate y for node
@@ -114,33 +114,35 @@ function computeNodesLinear(allMonomerLists, editor, maxNptsL, width, height, pa
  // define first x depending on if there is more or less monomers than maxNptsL
  if(allMonomerLists.monomerList.length<maxNptsL)
  {
-   xNode = parseInt((width - horizontalSpace*(allMonomerLists.monomerList.length-
+   xNode = parseInt((graphicAtt.svgWidth - horizontalSpace*(allMonomerLists.monomerList.length-
     1))/2) ;
  }
  else
  {
-   xNode = paddingX;
+   xNode = graphicAtt.paddingX;
  }
  // define first y depending on if there is only 1 row or more
  if(nrows>1)
  {
-  if(verticalLimit < parseInt((height-paddingY*2)/(nrows-1)))
+  if(graphicAtt.verticalLimit < parseInt((graphicAtt.svgHeight-
+   graphicAtt.paddingY*2)/(nrows-1)))
   {
-   verticalSpace = verticalLimit
+   verticalSpace = graphicAtt.verticalLimit
   }
   else
   { 
-   verticalSpace = parseInt((height-paddingY*2)/(nrows-1));
+   verticalSpace = parseInt((graphicAtt.svgHeight-
+    graphicAtt.paddingY*2)/(nrows-1));
   }
-  yNode = paddingY; 
+  yNode = graphicAtt.paddingY; 
  }
- else if(editor == 'off')
+ else if(graphicAtt.editor == 'off')
  {
-  yNode = paddingY;	 
+  yNode = graphicAtt.paddingY;	 
  }
  else
  {
-  yNode = height/2;
+  yNode = graphicAtt.svgHeight/2;
  }
 
  // get coordinates for every node
@@ -164,7 +166,7 @@ function computeNodesLinear(allMonomerLists, editor, maxNptsL, width, height, pa
   xNode += iterate*(horizontalSpace);
   /* if x too big after adding step, recharge 
   old value and start decreasing x; also add step to y*/
-  if(xNode > (width-paddingX))
+  if(xNode > (graphicAtt.svgWidth-graphicAtt.paddingX))
   {
    iterate = -1;
    xNode = xNodeTmp;
@@ -172,7 +174,7 @@ function computeNodesLinear(allMonomerLists, editor, maxNptsL, width, height, pa
   }
   /* if x too small after adding step, recharge old value 
   and start increasing x; also add step to y*/
-  else if(xNode < paddingX)
+  else if(xNode < graphicAtt.paddingX)
   {
    iterate = 1;
    xNode = xNodeTmp;
@@ -182,17 +184,16 @@ function computeNodesLinear(allMonomerLists, editor, maxNptsL, width, height, pa
  }
  
  // if visualizer, tries to diminish the size of canvas if linear peptide is small enough
- if(editor == 'off')
+ if(graphicAtt.editor == 'off')
  {
-  var newSvgHeight = yNode + paddingY;
+  var newSvgHeight = yNode + graphicAtt.paddingY;
   if(allMonomerLists.monomerList.length<=maxNptsL)
   {
-   newSvgHeight = paddingY * 2;  
+   newSvgHeight = graphicAtt.paddingY * 2;  
   }
-  console.log('new', paddingY, newSvgHeight, yNode); 
   document.getElementById(svgId).setAttribute('height', newSvgHeight+'px'); 
+  graphicAtt.svgHeight = newSvgHeight;
  }
- 
  return nodeCoordinates;
 }
 
