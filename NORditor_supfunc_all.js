@@ -149,3 +149,20 @@ function msieversion()
   return 0;
  }
 }
+
+// ------------------ Warning ------------------ 
+
+// prints warning message if svg is unsupported
+function printWarning()
+{
+ var warningDiv = document.createElement('div');
+ warningDiv.className = 'svg_warning_message';
+ var warning = document.createElement('p');
+ warning.innerHTML = 'It seems your browser does not support svg. To use this editor,'+
+  'you need to upgrade it to the newer version. You can consult the list of browsers supporting '+
+  'svg at <a href = "http://caniuse.com/#feat=svg">this page</a>. Go '+ 
+  '<a href = "https://www.mozilla.org/en-US/firefox/new/">here</a> to download the latest version '+
+  'of Firefox.';	
+ warningDiv.appendChild(warning);
+ document.body.appendChild(warningDiv); 
+}

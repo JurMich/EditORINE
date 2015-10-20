@@ -624,17 +624,29 @@ function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem)
  var peptideType = getPeptideType(allMonomerLists);
  if(peptideType == 'no edge')
  {
-  nodeCoordinates =  computeNodesNoEdge(allMonomerLists, 4, graphicAtt.svgWidth, graphicAtt.svgHeight, 
-   graphicAtt.paddingX, graphicAtt.paddingY);
+  if(graphicAtt.editor == 'on')
+  {	 
+   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, interfaceElem.svgId, 'no');
+  }
+  else
+  {
+   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, interfaceElem.svgId, 'no');  
+  }
  }
  else if(peptideType == 'linear')
  {
-  nodeCoordinates =  computeNodesLinear(allMonomerLists, 4, graphicAtt, interfaceElem.svgId);
+  if(graphicAtt.editor == 'on')
+  {	 
+   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, interfaceElem.svgId, 'yes');
+  }
+  else
+  {
+   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, interfaceElem.svgId, 'yes');  
+  }
  }
  else if(peptideType == 'single cycle')
- {
-  nodeCoordinates =  computeNodesCycle(allMonomerLists, 5, graphicAtt.svgWidth, graphicAtt.svgHeight,
-   graphicAtt.paddingX, graphicAtt.paddingY);
+ { 	 
+  nodeCoordinates =  computeNodesCycle(allMonomerLists, graphicAtt, interfaceElem.svgId);
  }
  else if(peptideType == 'other')
  {

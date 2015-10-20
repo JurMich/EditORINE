@@ -191,3 +191,21 @@ h1.image_window_msg{
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 	font-size:15px;
 }
+
+/*warning message if svg is not supported*/
+div.svg_warning_message{
+	width: 500px;
+	height: 115px;
+	border: 2px solid;
+	text-align: center;
+}
+
+.svg_warning_message>p{
+	padding-left: 8px;
+	padding-right: 8px;
+	padding-top: 8px;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-size: 14px;
+	color: red;
+	text-align: inherit;
+}

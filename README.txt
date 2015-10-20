@@ -80,9 +80,9 @@ this line:
 	d3.json('monomers.json', function(jsonContents)
 	{
    
-In 'NORditor_main_editor.js', it should be at line 176 - 177 (closing tag
-'});' at 180) and in 'NORditor_main_visualizator.js', line 108 - 109 
-(closing tag at 112). Remove the lines along with the closing tag.
+In 'NORditor_main_editor.js', it should be at line 178 - 179 (closing tag
+'});' at 183) and in 'NORditor_main_visualizator.js', line 114 - 115 
+(closing tag at 118). Remove the lines along with the closing tag.
 
 3.) Run editor at the server:
 Simply place your 'monomers.json' file in data directory of your site and
