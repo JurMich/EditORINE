@@ -82,7 +82,7 @@ function suppressNodesAndEdges(nodeNumber, allMonomerLists, outputField)
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - outputField : an 'input' field where NOR translation of a graph is output
  */
-function addEdge(startingNode, endingNode, allMonomerLists, outputField)
+function addEdge(startingNode, endingNode, allMonomerLists, outputField1, outputField2)
 {
  startingNode = parseInt(startingNode);
  endingNode = parseInt(endingNode);
@@ -98,7 +98,7 @@ function addEdge(startingNode, endingNode, allMonomerLists, outputField)
   allMonomerLists.edgeList[indexOfEndingNode].push(startingNode);
  }
  // update output field 
- graphToNOR(allMonomerLists, outputField);	
+ graphToNOR(allMonomerLists, outputField1, outputField2);	
 }
 
 /* removes edge connecting monomer number startingNode and endingNode from edgeList
@@ -106,7 +106,7 @@ function addEdge(startingNode, endingNode, allMonomerLists, outputField)
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - outputField : an 'input' field where NOR translation of a graph is output
 */
-function removeEdge(startingNode, endingNode, allMonomerLists, outputField)
+function removeEdge(startingNode, endingNode, allMonomerLists, outputField1, outputField2)
 {
  startingNode = parseInt(startingNode);
  endingNode = parseInt(endingNode);
@@ -125,5 +125,5 @@ function removeEdge(startingNode, endingNode, allMonomerLists, outputField)
   allMonomerLists.edgeList[indexOfEndingNode].splice(startingNodeToDel, 1);
  }
  // update output field 
- graphToNOR(allMonomerLists, outputField);
+ graphToNOR(allMonomerLists, outputField1, outputField2);
 }

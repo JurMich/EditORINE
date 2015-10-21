@@ -79,7 +79,7 @@ function addMonomer(cursorX, cursorY, menuAtts, allMonomerLists, graphicAtt, int
  allMonomerLists.indexList.push(allMonomerLists.nodeNum); 	
  allMonomerLists.edgeList.push([]);		// placeholder for list of edges
  // update text field
- graphToNOR(allMonomerLists, interfaceElem.outputField);
+ graphToNOR(allMonomerLists, interfaceElem.outputField,interfaceElem.exterNORField);
 
  // obtain list of colors which will be used
  var colorPalette = menuAtts.dragged ? [graphicAtt.colorDragged] : graphicAtt.color;
@@ -293,8 +293,8 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
       .attr('y2', coordY + graphicAtt.rectMainHeight/2);
 
      // creates all of edge's actions once the edge is confirmed
-     edge = createEdgeActions(edge, allMonomerLists, graphicAtt, interfaceElem.outputField, 1);	
-     addEdge(nodeNumberStarting.substring(1), nodeNumberEnding.substring(1), allMonomerLists, interfaceElem.outputField);	// removing "n"
+     edge = createEdgeActions(edge, allMonomerLists, graphicAtt, interfaceElem.outputField, interfaceElem.exterNORField, 1);	
+     addEdge(nodeNumberStarting.substring(1), nodeNumberEnding.substring(1), allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField);	// removing "n"
      
      d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group').selectAll('.main_element').on('mousedown.drag', dragCallBack);
 								
@@ -359,7 +359,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
 	 addColorLegend(gMono, allMonomerLists, graphicAtt);
 	 var monId = d3.select(this.parentNode).attr('id');  
 	 updateMonomerList(monId, menuAtts.activeMonomer, allMonomerLists);
-	 graphToNOR(allMonomerLists, interfaceElem.outputField); 
+	 graphToNOR(allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField); 
 	}
   });
 
@@ -414,7 +414,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
  - outputField : an 'input' field where NOR translation of a graph is output
  - numberBindings : number of bounds created edge will contain
 */
-function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField, numberBindings)
+function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField1, outputField2, numberBindings)
 {
  var connection = edge.select(".main_edge_line");
  
@@ -470,13 +470,13 @@ function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField, numbe
   if (numberBounds.text() == '1')
   {	
    numberBounds.text('2');
-   addEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField); 	// adds edge to their list
+   addEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField1, outputField2); 	// adds edge to their list
    edge.select('line').style('stroke-width', doubleBoundStroke);	
   }
   else
   {
    numberBounds.text('1');
-   removeEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField);
+   removeEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField1, outputField2);
    edge.select('line').style('stroke-width', singleBoundStroke);
   }
  });
@@ -486,10 +486,10 @@ function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField, numbe
   .style('display', 'none')
   .on('click', function(){
    d3.event.stopPropagation();	
-   removeEdge(edge.attr('starting_node').substring(1), edge.attr('ending_node').substring(1), allMonomerLists, outputField);
+   removeEdge(edge.attr('starting_node').substring(1), edge.attr('ending_node').substring(1), allMonomerLists, outputField1, outputField2);
    if(numberBounds.text() == '2')
    {
-    removeEdge(edge.attr('starting_node').substring(1), edge.attr('ending_node').substring(1), allMonomerLists, outputField);
+    removeEdge(edge.attr('starting_node').substring(1), edge.attr('ending_node').substring(1), allMonomerLists, outputField1, outputField2);
    } 
    edge.remove();
   });                         			

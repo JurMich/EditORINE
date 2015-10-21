@@ -162,7 +162,7 @@ nodeNumberStarting an nodeNumberEnding are given
  - outputField : an 'input' field where NOR translation of a graph is output
 Note: in case of using this wrapper, the nodes have to be known! 
 */
-function drawEdgeNodesOnly(nodeNumberStarting, nodeNumberEnding, numberBindings, allMonomerLists, graphicAtt, svgId, outputField)
+function drawEdgeNodesOnly(nodeNumberStarting, nodeNumberEnding, numberBindings, allMonomerLists, graphicAtt, svgId, outputField1, outputField2)
 {
  var nodeLayer = d3.select('#'+svgId).select('.nodeLayer'); 
  var x1 = parseInt(nodeLayer.select('#monomer_'+nodeNumberStarting).select('.main_element').attr('x'));
@@ -178,7 +178,7 @@ function drawEdgeNodesOnly(nodeNumberStarting, nodeNumberEnding, numberBindings,
  // add actions only if it's editor 
  if(graphicAtt.editor == 'on')
  {
-  createEdgeActions(edge, allMonomerLists, graphicAtt, outputField, numberBindings);
+  createEdgeActions(edge, allMonomerLists, graphicAtt, outputField1, outputField2, numberBindings);
  } 
 }
 

@@ -13,25 +13,26 @@
 /* computes and returns coordinates for linear peptide (snake) or no edge:
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
+ - specAtt : attributes used for deterministic layout computation
  - svgId : ID of the main svg window
  - edges : indicates if using edge mode or not
  returns list of coordinates for every point.
  NOTE: coordinates of every node is the middle of main rectangle
 */
 
-function computeNodesLNEEditor(allMonomerLists, graphicAtt, svgId, edges)
+function computeNodesLNEEditor(allMonomerLists, graphicAtt, specLayout, svgId, edges)
 {
  var count = 0; // number of monomers treated
- var nrows = Math.ceil(allMonomerLists.monomerList.length/graphicAtt.maxPerLine); // number of rows of monomers to draw
+ var nrows = Math.ceil(allMonomerLists.monomerList.length/specLayout.maxPerLine); // number of rows of monomers to draw
  // horizontal space between monomers
- var horizontalSpace = graphicAtt.horizontalLimit;
+ var horizontalSpace = specLayout.horizontalLimit;
  var verticalSpace;  // vertical space between monomers
  var xNode;          // coordinate x for node
  var yNode;          // coordinate y for node
  // define first x depending on if there is more or less monomers than maxNptsL
- if(allMonomerLists.monomerList.length<graphicAtt.maxPerLine)
+ if(allMonomerLists.monomerList.length<specLayout.maxPerLine)
  {
-  xNode = parseInt((graphicAtt.svgWidth - horizontalSpace*
+  xNode = parseInt((specLayout.svgWidth - horizontalSpace*
    (allMonomerLists.monomerList.length - 1))/2) ;
  }
  else
@@ -41,31 +42,31 @@ function computeNodesLNEEditor(allMonomerLists, graphicAtt, svgId, edges)
  // define y and vertical space depending on if there is only 1 row or more
  if(nrows>1)
  {
-  if(graphicAtt.verticalLimit < parseInt((graphicAtt.svgHeight-
+  if(specLayout.verticalLimit < parseInt((specLayout.svgHeight-
    graphicAtt.paddingY*2)/(nrows-1)))
   {
-   verticalSpace = graphicAtt.verticalLimit
+   verticalSpace = specLayout.verticalLimit
   }
   else
   { 
-   verticalSpace = parseInt((graphicAtt.svgHeight-
+   verticalSpace = parseInt((specLayout.svgHeight-
     graphicAtt.paddingY*2)/(nrows-1));
   }
-  yNode = graphicAtt.svgHeight/2 - ((nrows - 1)*verticalSpace)/2; 
+  yNode = specLayout.svgHeight/2 - ((nrows - 1)*verticalSpace)/2; 
  }
  else
  {
-  yNode = graphicAtt.svgHeight/2;
+  yNode = specLayout.svgHeight/2;
  }
  if(edges == 'yes')
  {
   var nodeCoordinates = getCoordinatesLinear(xNode, yNode, 
-   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt);
+   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt, specLayout);
  }
  else
  {
   var nodeCoordinates = getCoordinatesNoEdge(xNode, yNode, 
-   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt); 
+   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt, specLayout); 
  }
  return nodeCoordinates;
 }
@@ -74,32 +75,33 @@ function computeNodesLNEEditor(allMonomerLists, graphicAtt, svgId, edges)
  cuts down the size of resulting image:
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
+ - specLayout : attributes used for deterministic layout computation
  - svgId : ID of the main svg window
  - edges : indicates if using edge mode or not
  returns list of coordinates for every point.
 */
 
-function computeNodesLNEVis(allMonomerLists, graphicAtt, svgId, edges)
+function computeNodesLNEVis(allMonomerLists, graphicAtt, specLayout, svgId, edges)
 {
  var count = 0; // number of monomers treated
- var nrows = Math.ceil(allMonomerLists.monomerList.length/graphicAtt.maxPerLine); // number of rows of monomers to draw
+ var nrows = Math.ceil(allMonomerLists.monomerList.length/specLayout.maxPerLine); // number of rows of monomers to draw
  // horizontal space between monomers
- var horizontalSpace = graphicAtt.horizontalLimit;
+ var horizontalSpace = specLayout.horizontalLimit;
  var verticalSpace;  // vertical space between monomers
  var xNode = graphicAtt.paddingX;          // coordinate x for node
  var yNode = graphicAtt.paddingY;          // coordinate y for node
 
  // define vertical space depending on if there is enough of place or not
- if(graphicAtt.verticalLimit < parseInt((graphicAtt.svgHeight-
+ if(specLayout.verticalLimit < parseInt((specLayout.svgHeight-
   graphicAtt.paddingY*2)/(nrows-1)))
  {
-  verticalSpace = graphicAtt.verticalLimit;
+  verticalSpace = specLayout.verticalLimit;
  }
  else
  { 
   if(nrows>1)
   {	 
-   verticalSpace = parseInt((graphicAtt.svgHeight-
+   verticalSpace = parseInt((specLayout.svgHeight-
    graphicAtt.paddingY*2)/(nrows-1));
   }
  }
@@ -107,12 +109,12 @@ function computeNodesLNEVis(allMonomerLists, graphicAtt, svgId, edges)
  if(edges == 'yes')
  {
   var nodeCoordinates = getCoordinatesLinear(xNode, yNode, 
-   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt);
+   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt, specLayout);
  }
  else
  {
   var nodeCoordinates = getCoordinatesNoEdge(xNode, yNode, 
-   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt); 
+   horizontalSpace, verticalSpace, allMonomerLists, graphicAtt, specLayout); 
  }
  
  // for visualizer, adjust size of svg
@@ -125,7 +127,7 @@ function computeNodesLNEVis(allMonomerLists, graphicAtt, svgId, edges)
  }
  else
  {
-  var newSvgWidth = graphicAtt.svgWidth;
+  var newSvgWidth = specLayout.svgWidth;
  }
  
  if(nrows>1)
@@ -149,8 +151,9 @@ function computeNodesLNEVis(allMonomerLists, graphicAtt, svgId, edges)
  - verticalSpace: like preceeding, but vertically
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
+ - specLayout : attributes used for deterministic layout computation
  */
-function getCoordinatesLinear(xNode, yNode, horizontalSpace, verticalSpace, allMonomerLists, graphicAtt)
+function getCoordinatesLinear(xNode, yNode, horizontalSpace, verticalSpace, allMonomerLists, graphicAtt, specLayout)
 {
  var count = 0;	
  var actualNode = getStartOfLinearPeptide(allMonomerLists);
@@ -182,7 +185,7 @@ function getCoordinatesLinear(xNode, yNode, horizontalSpace, verticalSpace, allM
   xNode += iterate*(horizontalSpace);
   /* if x too big after adding step, recharge 
   old value and start decreasing x; also add step to y*/
-  if(xNode > (graphicAtt.svgWidth-graphicAtt.paddingX))
+  if(xNode > (specLayout.svgWidth-graphicAtt.paddingX))
   {
    iterate = -1;
    xNode = xNodeTmp;
@@ -207,9 +210,10 @@ function getCoordinatesLinear(xNode, yNode, horizontalSpace, verticalSpace, allM
  - horizontalSpace: space between two succesive nodes horizontally
  - verticalSpace: like preceeding, but vertically
  - allMonomerLists : lists containing information  about each monomer of peptide chains
+ - specLayout : attributes used for deterministic layout computation
  - graphicAtt : object containing all graphical parameters
  */
-function getCoordinatesNoEdge(xNode, yNode, horizontalSpace, verticalSpace, allMonomerLists, graphicAtt)
+function getCoordinatesNoEdge(xNode, yNode, horizontalSpace, verticalSpace, allMonomerLists, graphicAtt, specLayout)
 {
  var count = 0;	
  var nodeCoordinates = [];	// results	
@@ -227,7 +231,7 @@ function getCoordinatesNoEdge(xNode, yNode, horizontalSpace, verticalSpace, allM
   xNode += iterate*(horizontalSpace);
   /* if x too big after adding step, recharge 
   old value and start decreasing x; also add step to y*/
-  if(xNode > (graphicAtt.svgWidth-graphicAtt.paddingX))
+  if(xNode > (specLayout.svgWidth-graphicAtt.paddingX))
   {
    iterate = -1;
    xNode = xNodeTmp;
@@ -270,12 +274,13 @@ function getStartOfLinearPeptide(allMonomerLists)
 /* computes and returns coordinates for linear peptide (snake) or no edge:
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
+ - specLayout : attributes used for deterministic layout computation
  - svgId : ID of the main svg window
  - edges : indicates if using edge mode or not
  returns list of coordinates for every point.
  NOTE: coordinates of every node is the middle of main rectangle
 */
-function computeNodesCycle(allMonomerLists, graphicAtt, svgId)
+function computeNodesCycle(allMonomerLists, graphicAtt, specLayout, svgId)
 {
  // it's a cycle, doesnt matter, where we start
  var actualNode = 0;
@@ -291,25 +296,25 @@ function computeNodesCycle(allMonomerLists, graphicAtt, svgId)
  // using cartesian definition of an ellipse
  var a; // X axis of ellipse
  var b; // Y axis of ellipse
- if (allMonomerLists.monomerList.length < graphicAtt.minInBiggestCycle)
+ if (allMonomerLists.monomerList.length < specLayout.minInBiggestCycle)
  {
-  a = (graphicAtt.svgWidth - graphicAtt.paddingX*2)/
-   (2*(graphicAtt.minInBiggestCycle - allMonomerLists.monomerList.length + 1));
-  b = (graphicAtt.svgHeight - graphicAtt.paddingY*2)/(2*(graphicAtt.minInBiggestCycle - 
+  a = (specLayout.svgWidth - graphicAtt.paddingX*2)/
+   (2*(specLayout.minInBiggestCycle - allMonomerLists.monomerList.length + 1));
+  b = (specLayout.svgHeight - graphicAtt.paddingY*2)/(2*(specLayout.minInBiggestCycle - 
    allMonomerLists.monomerList.length + 1));
  }
  else
  {
-  a = (graphicAtt.svgWidth - graphicAtt.paddingX*2)/2;
-  b = (graphicAtt.svgHeight - graphicAtt.paddingY*2)/2;
+  a = (specLayout.svgWidth - graphicAtt.paddingX*2)/2;
+  b = (specLayout.svgHeight - graphicAtt.paddingY*2)/2;
  }
  var xNode;
  var yNode;
  // defining center of ellipse 
  if(graphicAtt.editor == 'on')
  {
-  var centerX = graphicAtt.svgWidth/2;
-  var centerY = graphicAtt.svgHeight/2;
+  var centerX = specLayout.svgWidth/2;
+  var centerY = specLayout.svgHeight/2;
  }
  else
  {
@@ -343,7 +348,7 @@ function computeNodesCycle(allMonomerLists, graphicAtt, svgId)
  // if visualizator, resize image
  if(graphicAtt.editor == 'off')
  {
-  if (allMonomerLists.monomerList.length < graphicAtt.minInBiggestCycle)
+  if (allMonomerLists.monomerList.length < specLayout.minInBiggestCycle)
   {
    var newSvgWidth = 2*(a + graphicAtt.paddingX);
    var newSvgHeight = 2*(b + graphicAtt.paddingY);

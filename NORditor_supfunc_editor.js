@@ -14,7 +14,7 @@
 to constuct the NOR format, which is then directly shown in outputField
  - allMonomerLists : lists containing peptide chains
  - outputField : an 'input' field where NOR translation of a graph is output */
-function graphToNOR(allMonomerLists, outputField)
+function graphToNOR(allMonomerLists, outputField1, outputField2)
 {	
  var NORmat = allMonomerLists.monomerList.join(",");
  NORmat = NORmat + '@';
@@ -36,7 +36,11 @@ function graphToNOR(allMonomerLists, outputField)
  if(NORmat == '@'){
   NORmat = '';
  }
- outputField.value = NORmat;
+ outputField1.value = NORmat;
+ if(outputField2 != undefined)
+ {
+  outputField2.value = NORmat;	 
+ }
 }
 
 // ------------------ Event enablers and disablers ------------------

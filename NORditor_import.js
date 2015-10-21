@@ -568,7 +568,7 @@ function plotGraph(nodeCoordinates, menuAtts, allMonomerLists, graphicAtt, inter
    if(uniqueEdges[0][b]>allMonomerLists.indexList[a])
    {
     drawEdgeNodesOnly(allMonomerLists.indexList[a], uniqueEdges[0][b], uniqueEdges[1][b], allMonomerLists, 
-     graphicAtt, interfaceElem.svgId, interfaceElem.outputField);
+     graphicAtt, interfaceElem.svgId, interfaceElem.outputField, interfaceElem.exterNORField);
    }
   }
  }
@@ -583,10 +583,11 @@ function plotGraph(nodeCoordinates, menuAtts, allMonomerLists, graphicAtt, inter
  - menuAtts : properties of menu (currently selected monomer etc.)
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
+ - specLayout : attributes used for deterministic layout computation
  - interfaceElem : variables/objects of interface such as id of svg or input fields
  - colorList : list of monomer <-> color associations
 */
-function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList)
+function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem, colorList)
 {
  if(NORmat != interfaceElem.resultString)
  {	
@@ -599,7 +600,7 @@ function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists
   // import NOR
   NORImport(NORmat, allMonomerLists, externField, colorList);
   // import NOR
-  draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
+  draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem);
  }
 }
 
@@ -608,13 +609,14 @@ function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists
  - menuAtts : properties of menu (currently selected monomer etc.)
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
+ - specLayout : attributes used for deterministic layout computation
  - interfaceElem : variables/objects of interface such as id of svg or input fields
 Note: this function is called by an event directly thus cannot have attributes.
 Graphical attributes are thus passed in 'NORditor_main' as global variables. You can
 set them there.
 */
 
-function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem)
+function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem)
 {
 // var t0 = performance.now();
  // removes all graphics from layers
@@ -626,27 +628,27 @@ function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, interfaceElem)
  {
   if(graphicAtt.editor == 'on')
   {	 
-   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, interfaceElem.svgId, 'no');
+   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'no');
   }
   else
   {
-   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, interfaceElem.svgId, 'no');  
+   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'no');  
   }
  }
  else if(peptideType == 'linear')
  {
   if(graphicAtt.editor == 'on')
   {	 
-   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, interfaceElem.svgId, 'yes');
+   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'yes');
   }
   else
   {
-   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, interfaceElem.svgId, 'yes');  
+   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'yes');  
   }
  }
  else if(peptideType == 'single cycle')
  { 	 
-  nodeCoordinates =  computeNodesCycle(allMonomerLists, graphicAtt, interfaceElem.svgId);
+  nodeCoordinates =  computeNodesCycle(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId);
  }
  else if(peptideType == 'other')
  {
