@@ -192,7 +192,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   var nodeNumber = d3.select(this.parentNode).attr('id').split('_')[1];
 				
   // removes node and connecting edges from tables
-  suppressNodesAndEdges(nodeNumber, allMonomerLists, interfaceElem.outputField);
+  suppressNodesAndEdges(nodeNumber, allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField);
 
   // removes node and connecting edges from graphic interface
   d3.select('#'+interfaceElem.svgId).selectAll('.graph_edge[starting_node=n'+nodeNumber+']').remove();

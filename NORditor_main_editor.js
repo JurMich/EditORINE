@@ -132,7 +132,6 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   // listener to pressing of Ctrl
   document.addEventListener("keydown", function(event){
    if((event.ctrlKey) && (menuAtts.conserveMonomers == false)){
-	   console.log('truuuuuuuuu');
     menuAtts.conserveMonomers = true;
    }		
   });
@@ -140,7 +139,6 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   // listener to releasing of Ctrl 
   document.addEventListener("keyup", function(event){
    if(!event.ctrlKey){
-	   console.log('faaaals');
     menuAtts.conserveMonomers = false;
    }		
   });

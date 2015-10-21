@@ -53,7 +53,7 @@ function endEdgeMode(menuAtts, allMonomerLists, graphicAtt, interfaceElem)
  - allMonomerLists : lists containing peptide chains
  - outputField : an 'input' field where NOR translation of a graph is output
 */
-function suppressNodesAndEdges(nodeNumber, allMonomerLists, outputField)
+function suppressNodesAndEdges(nodeNumber, allMonomerLists, outputField1 ,outputField2)
 {	
  // gets index of monomer to delete in table
  nodeNumber = parseInt(nodeNumber);
@@ -74,7 +74,7 @@ function suppressNodesAndEdges(nodeNumber, allMonomerLists, outputField)
   allMonomerLists.color.splice(indexOfNode, 1);
  }
  // update output field 
- graphToNOR(allMonomerLists, outputField);			 	
+ graphToNOR(allMonomerLists, outputField1, outputField2);			 	
 }
 
 /* adds edge connecting monomer number startingNode and endingNode to edgeList
