@@ -48,7 +48,7 @@ function createMenu(nodes, menuAtts, allMonomerLists, graphicAtt, interfaceElem,
  var li = document.createElement('LI');
  var p = document.createElement('P');
  var span = document.createElement('span');
- p.innerHTML = '<span class=\'color_marker\' style=\'color:hsl(0, 0%, 15%);\'>&#x25B0;</span> X';
+ p.innerHTML = '<span class=\'color_marker\' style=\'color:hsl(0, 0%, 15%);\'>&#x25B2;</span> X';
  p.className = 'editor_menuItem';
  p.draggable = true;
  p.id = 'X';
@@ -63,9 +63,26 @@ function createMenu(nodes, menuAtts, allMonomerLists, graphicAtt, interfaceElem,
  li.appendChild(p);
  level++; // this indicates current level in list (indentation)	
  li.appendChild(parseNodes(nodes, level, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList)[0]);
- p.onclick = (function (event){
+ p.onclick = (function (event)
+ {
   var selectedMenuItem = d3.select(this);
   changeMonomer("X", selectedMenuItem, menuAtts, allMonomerLists, graphicAtt, interfaceElem);	
+ });
+ $(p).children('.color_marker').css('cursor', 'pointer');
+ $(p).children('.color_marker').click(function(event){
+  event.stopPropagation(); 
+  var thisSpanButton = $(this);
+  var lowerList = $(this).parent().parent().children('ul'); 
+  if(lowerList.css('display')!='none')
+  {
+   lowerList.css('display','none');
+   thisSpanButton.html('&#x25BC;');
+  }	
+  else
+  {
+   lowerList.css('display','block');	 
+   thisSpanButton.html('&#x25B2;'); 
+  }	
  });
  p.style.cssText = 'padding-left:' + (level*10) + 'px';
  menu.appendChild(li);
@@ -112,7 +129,7 @@ function parseNode(node, level, menuAtts, allMonomerLists, graphicAtt, interface
  // creates li element(s) of ul list
  var li = document.createElement('LI');
  var p = document.createElement('P');
- p.innerHTML = '<span class=\'color_marker\' style=\'color:'+node.color+';\'>&#x25B0;</span> ' + node.name;
+ p.innerHTML = '<span class=\'color_marker\' style=\'color:'+node.color+';\'>&#x25B2;</span> ' + node.name;
  p.className = 'editor_menuItem';
  p.draggable = true;
  p.id = node.name;
@@ -132,31 +149,72 @@ function parseNode(node, level, menuAtts, allMonomerLists, graphicAtt, interface
  // treating differents object attributes 
  if(node.monomer)
  { 
-  li.appendChild(parseNodes(node.monomer, level, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList)[0]);
-  p.onclick = (function (event){
+  if(node.monomer.length>0)
+  {	 	  
+   li.appendChild(parseNodes(node.monomer, level, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList)[0]);
+   var thisSpanButton = $(p).children('.color_marker');
+   var lowerList = $(p).parent().children('ul'); 
+   thisSpanButton.css('cursor', 'pointer');
+   $(p).children('.color_marker').click(function(event){
+    event.stopPropagation(); 
+    if(lowerList.css('display')!='none')
+    {
+     lowerList.css('display','none');
+     thisSpanButton.html('&#x25BC;');
+    }	
+    else
+    {
+     lowerList.css('display','block');	 
+     thisSpanButton.html('&#x25B2;'); 
+    }
+   });
+   lowerList.css('display','none');
+   thisSpanButton.html('&#x25BC;');
+   p.onclick = (function (event){
 			
-   var selectedMenuItem = d3.select(this);
-   changeMonomer(node.name, selectedMenuItem, menuAtts, allMonomerLists, graphicAtt, interfaceElem);	
-  });
+    var selectedMenuItem = d3.select(this);
+    changeMonomer(node.name, selectedMenuItem, menuAtts, allMonomerLists, graphicAtt, interfaceElem);	
+   });
+  }
  }
  if(node.cluster)
  {
-  li.appendChild(parseNodes(node.cluster, level, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList)[0]);
-  p.onclick = (function (event){
+  if(node.cluster.length>0)
+  {	 	 
+   li.appendChild(parseNodes(node.cluster, level, menuAtts, allMonomerLists, graphicAtt, interfaceElem, colorList)[0]); 
+   $(p).children('.color_marker').css('cursor', 'pointer');
+   $(p).children('.color_marker').click(function(event){
+    event.stopPropagation(); 
+    var thisSpanButton = $(this);
+    var lowerList = $(this).parent().parent().children('ul'); 
+    if(lowerList.css('display')!='none')
+    {
+     lowerList.css('display','none');
+     thisSpanButton.html('&#x25BC;');
+    }	
+    else
+    {
+     lowerList.css('display','block');	 
+     thisSpanButton.html('&#x25B2;'); 
+    }	
+   });
+   p.onclick = (function (event){
    var selectedMenuItem = d3.select(this);
    changeMonomer(node.name, selectedMenuItem, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
 
-  });
-
+   });
+  }
  }
  if(!(node.cluster) && !(node.monomer))
  {
+  $(p).children('.color_marker').html('&#x25B0;');	 
   p.onclick = function (event){	
 
    var selectedMenuItem = d3.select(this);
    changeMonomer(node.name, selectedMenuItem, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
   };
  }
+ 
  level--;
  return [li, level];
 }
