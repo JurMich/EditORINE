@@ -248,7 +248,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
 				
   // disable events associated with delete, chaining and rename functions
   disableMonomerButtons(interfaceElem.svgId);		// disable other buttons on every monomer
-					// disable events on edges
+  // disable events on edges
   d3.select('#'+interfaceElem.svgId).selectAll('.graph_edge').style('pointer-events','none');
   d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group').selectAll('.main_element').on('mousedown.drag', null);
 
@@ -264,6 +264,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   // draw edge with all corresponding elements then select sub-elements used further
   var edge = createEdgeBasic(x1, x2, y1, y2, nodeNumberStarting, '', 1, interfaceElem.svgId);
   var connection = edge.select('.main_edge_line');
+  var connection2 = edge.select('.main_edge_line_2');
 					 
   /* replace onclick event for all monomers when creating edge
   this event allows to connect edge to them  	 
@@ -280,31 +281,73 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
     var nodeNumberStarting = edge.attr('starting_node');
 
     // look if there is already an edge connecting this two monomers
-    var selectedEdges1 = d3.select('#'+interfaceElem.svgId).selectAll('.graph_edge[starting_node='+nodeNumberStarting+'][ending_node='+nodeNumberEnding+']').empty();
-    var selectedEdges2 = d3.select('#'+interfaceElem.svgId).selectAll('.graph_edge[starting_node='+nodeNumberEnding+'][ending_node='+nodeNumberStarting+']').empty();
+    var selectedEdges1 = d3.select('#'+interfaceElem.svgId)
+     .selectAll('.graph_edge[starting_node='+nodeNumberStarting+'][ending_node='+nodeNumberEnding+']');
+    var selectedEdges2 = d3.select('#'+interfaceElem.svgId)
+     .selectAll('.graph_edge[starting_node='+nodeNumberEnding+'][ending_node='+nodeNumberStarting+']');
+    console.log(selectedEdges1[0].length, selectedEdges2[0].length)
+    
+    var doubleBoundStroke = '7px';
+    
     // also look if starting node and ending node aren't same
     var sameNode = (nodeNumberEnding == nodeNumberStarting);
 
     // if there isn't edge connecting two monomers yet and ending nodes are not same, then create edge
-    if((selectedEdges1)&&(selectedEdges2)&&!(sameNode)){
+    if((selectedEdges1[0].length == 0)&&(selectedEdges2[0].length == 0)&&!(sameNode)){
 
      edge.attr("ending_node", nodeNumberEnding);
      connection.attr('x2', coordX + graphicAtt.rectMainWidth/2)
       .attr('y2', coordY + graphicAtt.rectMainHeight/2);
+     connection2.attr('x2', coordX + graphicAtt.rectMainWidth/2)
+      .attr('y2', coordY + graphicAtt.rectMainHeight/2);
 
      // creates all of edge's actions once the edge is confirmed
-     edge = createEdgeActions(edge, allMonomerLists, graphicAtt, interfaceElem.outputField, interfaceElem.exterNORField, 1);	
-     addEdge(nodeNumberStarting.substring(1), nodeNumberEnding.substring(1), allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField);	// removing "n"
+     edge = createEdgeActions(edge, allMonomerLists, graphicAtt, 
+      interfaceElem.outputField, interfaceElem.exterNORField, 1);	
+     addEdge(nodeNumberStarting.substring(1), nodeNumberEnding.substring(1),
+      allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField);	// removing "n"
      
      d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group').selectAll('.main_element').on('mousedown.drag', dragCallBack);
 								
-     // if there is already an edge connecting these two monomers, new one won't be added
     }
-    else
+     // first selection isn't empty
+    else if(selectedEdges1[0].length == 1)
     {
+	 var nBounds1 = selectedEdges1.select('text').text();
+	 if(nBounds1 == '1')
+	 {
+	  selectedEdges1.select('text').text('2');
+	  addEdge(nodeNumberStarting.substring(1), nodeNumberEnding.substring(1),
+       allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField);
+      selectedEdges1.select('.main_edge_line')
+       .style('stroke-width', doubleBoundStroke);	
+      selectedEdges1.select('.main_edge_line_2')
+       .style('stroke', 'rgba(255,255,255,1)');		 
+	 }
+	 	
      edge.remove();
-     d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group').selectAll('.main_element').on('mousedown.drag', dragCallBack);
-    }	
+     d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group')
+      .selectAll('.main_element').on('mousedown.drag', dragCallBack);	 
+    }
+     // second selection isn't empty
+    else if(selectedEdges2[0].length == 1)
+    {	 
+     var nBounds2 = selectedEdges2.select('text').text();
+     if(nBounds2 == '1')
+	 {
+	  selectedEdges2.select('text').text('2');
+	  addEdge(nodeNumberStarting.substring(1), nodeNumberEnding.substring(1),
+       allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField);
+      selectedEdges2.select('.main_edge_line')
+       .style('stroke-width', doubleBoundStroke);	
+      selectedEdges2.select('.main_edge_line_2')
+       .style('stroke', 'rgba(255,255,255,1)');		 
+	 }
+	 	
+	 edge.remove();
+     d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group')
+      .selectAll('.main_element').on('mousedown.drag', dragCallBack);	 
+    }
 
     // restore previous events (moving monomers by click etc.)		
     endEdgeMode(menuAtts, allMonomerLists, graphicAtt, interfaceElem);
@@ -319,10 +362,12 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   d3.select('#'+interfaceElem.svgId).on('mousemove', function(d){
    var mouseCoord = d3.mouse(this);
    connection.attr('x2', mouseCoord[0] - 10)
-    .attr('y2', mouseCoord[1]- 10)
-    .attr();
+    .attr('y2', mouseCoord[1]- 10);
+   connection2.attr('x2', mouseCoord[0] - 10)
+    .attr('y2', mouseCoord[1]- 10);
 
-   connection.attr('x1', parseInt(rectMono.attr('x')) + graphicAtt.rectMainWidth/2);	
+   connection.attr('x1', parseInt(rectMono.attr('x')) + graphicAtt.rectMainWidth/2);
+   connection2.attr('x1', parseInt(rectMono.attr('x')) + graphicAtt.rectMainWidth/2);	
   }).on('click', function(d){
    edge.remove();	// cancel line if monomer isn't selected
 
@@ -419,7 +464,7 @@ function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField1, outp
  var connection = edge.select(".main_edge_line");
  
  var singleBoundStroke = '3px';
- var doubleBoundStroke = '6px';
+ var doubleBoundStroke = '7px';
 
  /* creates empty, transparent background for switchRect to facilitate 
  button displaying while hovering over it */
@@ -471,13 +516,15 @@ function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField1, outp
   {	
    numberBounds.text('2');
    addEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField1, outputField2); 	// adds edge to their list
-   edge.select('line').style('stroke-width', doubleBoundStroke);	
+   edge.select('.main_edge_line').style('stroke-width', doubleBoundStroke);	
+   edge.select('.main_edge_line_2').style('stroke', 'rgba(255,255,255,1)');	
   }
   else
   {
    numberBounds.text('1');
    removeEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField1, outputField2);
-   edge.select('line').style('stroke-width', singleBoundStroke);
+   edge.select('.main_edge_line').style('stroke-width', singleBoundStroke);
+   edge.select('.main_edge_line_2').style('stroke', 'rgba(0,0,0,0)');	
   }
  });
 

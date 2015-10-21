@@ -196,7 +196,7 @@ function createEdgeBasic(x1, x2, y1, y2, nodeNumberStarting, nodeNumberEnding, n
 
  // line properties depending on number of bounds
  var singleBoundStroke = '3px';
- var doubleBoundStroke = '6px';
+ var doubleBoundStroke = '7px';
 
  // creating group containing every element of edge with appropriate attributes
  var edge = edgeLayer.append('g').attr('class', 'graph_edge')
@@ -214,10 +214,20 @@ function createEdgeBasic(x1, x2, y1, y2, nodeNumberStarting, nodeNumberEnding, n
   .attr('class', 'main_edge_line')
   .style('stroke', 'rgb(0, 0, 0)')
   .style('stroke-width', singleBoundStroke);
+ 
+ var connection2 = edge.append('line')
+  .attr('x1', x1)
+  .attr('y1', y1)
+  .attr('x2', x2)
+  .attr('y2', y2)
+  .attr('class', 'main_edge_line_2')
+  .style('stroke', 'rgba(0, 0, 0, 0)')
+  .style('stroke-width', '2px');  
 
  if (numberBindings == 2)
  {
   connection.style('stroke-width', doubleBoundStroke); 
+  connection2.style('stroke', 'rgba(255, 255, 255, 1)'); 
  } 
 
  return edge;

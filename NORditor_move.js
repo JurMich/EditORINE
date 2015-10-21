@@ -93,7 +93,10 @@ function moveEdges(nodeNumber, edgeEnd, newCoordinates, graphicAtt, parentDivId)
 
   // compare nodes new relative position, then adjust edge's ends positions
  	
-  d3.select(this).select('line').attr('x' + edgeEnd, newCoordinates[0])
+  d3.select(this).select('.main_edge_line').attr('x' + edgeEnd, newCoordinates[0])
+   .attr('x' + otherEdgeEnd, otherEndNodeX + graphicAtt.rectMainWidth/2)
+   .attr('y' + edgeEnd, newCoordinates[1]);
+  d3.select(this).select('.main_edge_line_2').attr('x' + edgeEnd, newCoordinates[0])
    .attr('x' + otherEdgeEnd, otherEndNodeX + graphicAtt.rectMainWidth/2)
    .attr('y' + edgeEnd, newCoordinates[1]);
 
