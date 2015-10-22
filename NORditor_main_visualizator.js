@@ -36,6 +36,7 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   var specLayout = {};
  
   var exterNORField = '';
+  interfaceElem.outputField = '';
  
   // pass svg and parent div IDs to object
   interfaceElem.svgId = svgId;

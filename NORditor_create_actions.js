@@ -17,7 +17,6 @@
 */
 function svgClickHandler(event, menuAtts, allMonomerLists, graphicAtt, interfaceElem)
 {
-	console.log('dragger', menuAtts.dragged)
  if(menuAtts.activeMonomer != '')
  {
   if(msieversion()==0)
