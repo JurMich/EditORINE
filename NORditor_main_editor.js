@@ -47,6 +47,9 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   interfaceElem.parentDivId = parentDivId;
   interfaceElem.exterNORField = exterNORField;
   interfaceElem.resultString = '';				  // stores result when modifications are realized
+  
+  // to differentiate between click and drag
+  interfaceElem.clickCancel = false;
  
   // Graphical:
   graphicAtt.svgad = 'http://www.w3.org/2000/svg'; // xml adress to svg

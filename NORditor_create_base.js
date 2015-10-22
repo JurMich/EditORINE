@@ -50,15 +50,6 @@ function createMonomerBase(coordinatesX, coordinatesY, monomerName, allMonomerLi
  {
   gMono.style('pointer-events', null);
  }
- 
- // create invisible background of buttons to make their grab easier
- var monomerBase = gMono.append('rect')
-  .attr('x', coordinatesX + graphicAtt.rectMainWidth/2 - graphicAtt.squareSmallDim/2)
-  .attr('y', coordinatesY - graphicAtt.rectMainHeight/2 - graphicAtt.squareSmallDim/2)
-  .attr('height', graphicAtt.rectMainHeight + graphicAtt.squareSmallDim)
-  .attr('width', graphicAtt.squareSmallDim)
-  .attr('class', 'monomer_movable')
-  .style('fill', 'rgba(255, 255, 255, 0)')
 
  // create 'body' of monomer representation (rectangle)
  var rectMono = gMono.append('rect')

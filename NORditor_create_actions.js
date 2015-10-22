@@ -135,10 +135,29 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   
  // adds onclick event to main rectangle (clicking stages it for moving)
  rectMono.style('cursor', 'move');
+ 
+ /* values of next variables are set in ondragstart. Then they are compared
+  with actual cursor coordinates. If there is bigger difference than 10 px
+  between either coordinate, drag is actived (and click disabled). This is
+  to preven some annoyances when wanting to click and making small move, which
+  gets then registered as drag */
+ var dragX;
+ var dragY;
 
  // adds drag behavior to main group (rassembling monomers)
- var drag = d3.behavior.drag().on("drag", function(){
-  dragAlong(this, menuAtts, graphicAtt, interfaceElem); 
+ var drag = d3.behavior.drag().on('dragstart', function(){
+  dragX = d3.mouse(svg)[0];
+  dragY = d3.mouse(svg)[1]; 
+ }).on('drag', function(){
+  var newDragX = d3.mouse(svg)[0];
+  var newDragY = d3.mouse(svg)[1];
+  // if move big enough then drag, not click
+  if((Math.abs(newDragX-dragX)>10)
+   || (Math.abs(newDragY-dragY)>10)) 
+  {	 
+   interfaceElem.clickCancel = true;
+   dragAlong(this, menuAtts, graphicAtt, interfaceElem);
+  } 
  });
  
  // adds onclick function to group
@@ -154,7 +173,8 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
 
  // create group holding elements representing 'delete' button
  var deleteGroup = gMono.append('g').attr('class', 'delete_element')
-					.style('display', 'none');
+					.style('display', 'none')
+					.style('cursor', 'pointer');
  // create "delete" square
  var rectDelete = deleteGroup.append('rect')
   .attr('x', mainRightBorder - graphicAtt.squareSmallDim/2)
@@ -186,7 +206,7 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   .style('stroke', 'rgb(255, 0, 0)');
 
  // create event deleting monomer if clicked
- deleteGroup.on('mousedown', function(){
+ deleteGroup.on('mousedown', function(){	 
   d3.event.stopPropagation();
 
   var nodeNumber = d3.select(this.parentNode).attr('id').split('_')[1];
@@ -206,44 +226,15 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
    rectDelete.style('fill', 'white');
  });
 
- // create group representing 'connection' button
- var chainGroup = gMono.append('g').attr('class', 'chain_element')
-  .style('display', 'none');	
-
- // create "connect" square
- var rectChain = chainGroup.append('rect')
-  .attr('x', mainRightBorder - graphicAtt.squareSmallDim/2)
-  .attr('y', coordinatesY - graphicAtt.squareSmallDim/2)
-  .attr('class', 'monomer_movable')
-  .attr('height', graphicAtt.squareSmallDim)
-  .attr('width', graphicAtt.squareSmallDim)
-  .style('fill', 'rgb(255, 255, 255)')
-  .style('stroke-width','1px')
-  .style('stroke', 'rgb(0, 0, 0)');
-
- // create chain (ellipse x2)
- var ellipse = chainGroup.append('ellipse')
-  .attr('cx', mainRightBorder - graphicAtt.squareSmallDim/6)
-  .attr('cy', coordinatesY)
-  .attr('rx', graphicAtt.squareSmallDim/5)
-  .attr('ry', graphicAtt.squareSmallDim/6)
-  .attr('class', 'monomer_movable')
-  .style('fill', 'rgba(255, 255, 255, 0)')
-  .style('stroke-width','2px')
-  .style('stroke', 'rgb(0, 0, 0)')
-
- var ellipse = chainGroup.append('ellipse')
-  .attr('cx', mainRightBorder + graphicAtt.squareSmallDim/6)
-  .attr('cy', coordinatesY)
-  .attr('rx', graphicAtt.squareSmallDim/5)
-  .attr('ry', graphicAtt.squareSmallDim/6)
-  .attr('class', 'monomer_movable')		
-  .style('fill', 'rgba(255, 255, 255, 0)')
-  .style('stroke-width','2px')
-  .style('stroke', 'rgb(0, 0, 0)');
-
  // creates event allowing to connect this monomer to others	
- chainGroup.on('click', function(){
+ gMono.on('click', function(){
+  d3.event.stopPropagation();	 
+  if(interfaceElem.clickCancel)
+  {
+   // negate 'clickCancel' and exit function;	  
+   interfaceElem.clickCancel = false;	   
+   return;
+  }
   d3.event.stopPropagation();		// stop bubbling
 				
   // disable events associated with delete, chaining and rename functions
@@ -252,9 +243,9 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   d3.select('#'+interfaceElem.svgId).selectAll('.graph_edge').style('pointer-events','none');
   d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group').selectAll('.main_element').on('mousedown.drag', null);
 
-  var mouseCoord = d3.mouse(this);	
+  var mouseCoord = d3.mouse(svg);	
   // get ID for monomer, from which connection starts	
-  var nodeNumberStarting = d3.select(this.parentNode).attr('id').split('_')[1];
+  var nodeNumberStarting = d3.select(this).attr('id').split('_')[1];
 
   var x1 = parseInt(rectMono.attr('x')) + graphicAtt.rectMainWidth;
   var y1 = parseInt(rectMono.attr('y')) + graphicAtt.rectMainHeight/2;
@@ -285,7 +276,6 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
      .selectAll('.graph_edge[starting_node='+nodeNumberStarting+'][ending_node='+nodeNumberEnding+']');
     var selectedEdges2 = d3.select('#'+interfaceElem.svgId)
      .selectAll('.graph_edge[starting_node='+nodeNumberEnding+'][ending_node='+nodeNumberStarting+']');
-    console.log(selectedEdges1[0].length, selectedEdges2[0].length)
     
     var doubleBoundStroke = '7px';
     
@@ -294,7 +284,6 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
 
     // if there isn't edge connecting two monomers yet and ending nodes are not same, then create edge
     if((selectedEdges1[0].length == 0)&&(selectedEdges2[0].length == 0)&&!(sameNode)){
-
      edge.attr("ending_node", nodeNumberEnding);
      connection.attr('x2', coordX + graphicAtt.rectMainWidth/2)
       .attr('y2', coordY + graphicAtt.rectMainHeight/2);
@@ -348,6 +337,13 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
      d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group')
       .selectAll('.main_element').on('mousedown.drag', dragCallBack);	 
     }
+     // if clicked on self
+    else
+    {
+	 edge.remove();
+     d3.select('#'+interfaceElem.svgId).selectAll('.monomer_group')
+      .selectAll('.main_element').on('mousedown.drag', dragCallBack);	
+	}
 
     // restore previous events (moving monomers by click etc.)		
     endEdgeMode(menuAtts, allMonomerLists, graphicAtt, interfaceElem);
@@ -382,73 +378,14 @@ function createMonomerActions(gMono, menuAtts, allMonomerLists, graphicAtt, inte
   rectChain.style('fill', 'white');
  });	
 
- // create group representing 'rename' button
- var renameGroup = gMono.append('g').attr('class', 'chain_element')
-  .style('display', 'none')
-  .on('click', function()
-  {
-	if(menuAtts.activeMonomer != '')
-	{
-	 d3.select(this.parentNode).select('text')
-	  .text(menuAtts.activeMonomer)
-	  .call(wrap, graphicAtt.rectMainWidth -  graphicAtt.squareSmallDim/2
-	   - graphicAtt.textPadding*2, graphicAtt.rectMainHeight - graphicAtt.textPadding*2);
-	 gMono.selectAll('.color_indicator').remove();
-	 var nodeNumber = parseInt(gMono.attr('id').split('_')[1]);
-     var indexOfThisNode = allMonomerLists.indexList.indexOf(nodeNumber);
-     allMonomerLists.color[indexOfThisNode] = [];
-     for(var i=0; i<graphicAtt.color.length; i++)
-     {
-      allMonomerLists.color[indexOfThisNode][i] = graphicAtt.color[i];
-     }
-	 addColorLegend(gMono, allMonomerLists, graphicAtt);
-	 var monId = d3.select(this.parentNode).attr('id');  
-	 updateMonomerList(monId, menuAtts.activeMonomer, allMonomerLists);
-	 graphToNOR(allMonomerLists, interfaceElem.outputField, interfaceElem.exterNORField); 
-	}
-  });
-
- // create 'rename' square
- var rectRename = renameGroup.append('rect')
-  .attr('x', mainRightBorder - graphicAtt.squareSmallDim/2)
-  .attr('y', mainBottomBorder - graphicAtt.squareSmallDim/2)
-  .attr('height', graphicAtt.squareSmallDim)
-  .attr('width', graphicAtt.squareSmallDim)
-  .attr('class', 'monomer_movable')	
-  .style('fill', 'rgb(255, 255, 255)')
-  .style('stroke-width','1px')
-  .style('stroke', 'rgb(0, 0, 0)')
-  .on('mouseover', function(){	// flashing in yellow on mouseover
-   d3.select(this).style('fill', 'yellow');
-  })
-  .on('mouseout', function(){
-   d3.select(this).style('fill', 'white');
-  });
-	
- // create 'rename' text		
- var text = renameGroup.append("text")
-  .attr('x', mainRightBorder)
-  .attr('y', mainBottomBorder + graphicAtt.squareSmallDim/4)
-  .attr('text-anchor', 'middle')
-  .attr('font-size', '15px')
-  .attr('font-family', 'monospace')
-  .attr('pointer-events', 'none')
-  .attr('class', 'monomer_movable')
-  .text(function(){return 'R';});	
- // display buttons only on mouseover and puts hovered element on top
-
  gMono.on("mouseover", function(){
   deleteGroup.style('display', 'block');
-  chainGroup.style('display', 'block');
-  renameGroup.style('display', 'block');
   if(msieversion()==0)
   {
    this.parentNode.appendChild(this); // puts hovered element on top
   }
  }).on("mouseout", function(){
   deleteGroup.style('display', 'none');
-  chainGroup.style('display', 'none');
-  renameGroup.style('display', 'none');
  });
 }
 
@@ -505,33 +442,8 @@ function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField1, outp
   .attr('fill', 'red')
   .text(numberBindings);
 
- // click event for edge - switching between 1 and 2 bounds	
- edge.on('click', function(d){
-  d3.event.stopPropagation();
-  var nodeNumberStarting = d3.select(this).attr('starting_node').substring(1);	// since attribute starts by 'n'
-  var nodeNumberEnding = d3.select(this).attr('ending_node').substring(1);
-
-  // adding edge
-  if (numberBounds.text() == '1')
-  {	
-   numberBounds.text('2');
-   addEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField1, outputField2); 	// adds edge to their list
-   edge.select('.main_edge_line').style('stroke-width', doubleBoundStroke);	
-   edge.select('.main_edge_line_2').style('stroke', 'rgba(255,255,255,1)');	
-  }
-  else
-  {
-   numberBounds.text('1');
-   removeEdge(nodeNumberStarting, nodeNumberEnding, allMonomerLists, outputField1, outputField2);
-   edge.select('.main_edge_line').style('stroke-width', singleBoundStroke);
-   edge.select('.main_edge_line_2').style('stroke', 'rgba(0,0,0,0)');	
-  }
- });
-
  // adds a group encapsulating elements of a button to remove edge
- var delEdgeGroup = edge.append('g')
-  .style('display', 'none')
-  .on('click', function(){
+ edge.on('click', function(){
    d3.event.stopPropagation();	
    removeEdge(edge.attr('starting_node').substring(1), edge.attr('ending_node').substring(1), allMonomerLists, outputField1, outputField2);
    if(numberBounds.text() == '2')
@@ -541,47 +453,11 @@ function createEdgeActions(edge, allMonomerLists, graphicAtt, outputField1, outp
    edge.remove();
   });                         			
 
- // adds Rectangle
- var delEdgeRect = delEdgeGroup.append('rect')
-  .attr('x', parseInt(switchRect.attr('x')) + graphicAtt.squareSmallDim)
-  .attr('y', parseInt(switchRect.attr('y')))
-  .attr('height', graphicAtt.squareSmallDim/2)
-  .attr('width', graphicAtt.squareSmallDim/2)
-  .attr('class', 'edge_movable')
-  .style('fill', 'rgb(255, 255, 255)')
-  .style('stroke-width','1px')
-  .style('stroke', 'rgb(0, 0, 0)');
-  
- // save coordinates of delEdgeRect to variables
- var delEdgeRectX = parseInt(delEdgeRect.attr('x'));
- var delEdgeRectY = parseInt(delEdgeRect.attr('y')); 
-
- // adds red delete cross
- var redline = delEdgeGroup.append('line')
-  .attr('x1', delEdgeRectX + 2)
-  .attr('y1', delEdgeRectY + 2)
-  .attr('x2', delEdgeRectX + graphicAtt.squareSmallDim/2 - 2)
-  .attr('y2', delEdgeRectY + graphicAtt.squareSmallDim/2 - 2)
-  .attr('class', 'edge_movable')
-  .style('stroke-width','2px')
-  .style('stroke', 'rgb(255, 0, 0)');
-
- var redline = delEdgeGroup.append('line')
-  .attr('x1', delEdgeRectX  + graphicAtt.squareSmallDim/2 - 2)
-  .attr('y1', delEdgeRectY + 2)
-  .attr('x2', delEdgeRectX + 2)
-  .attr('y2', delEdgeRectY  + graphicAtt.squareSmallDim/2 - 2)
-  .attr('class', 'edge_movable')
-  .style('stroke-width','2px')
-  .style('stroke', 'rgb(255, 0, 0)');
-
  // hovering effect for 'number of bounds' button
  edge.on('mouseover', function(d){
   switchGroup.style('display', 'block');
-  delEdgeGroup.style('display', 'block');
  }).on('mouseout', function(d){
   switchGroup.style('display', 'none');
-  delEdgeGroup.style('display', 'none');
  });
 
  return edge;
