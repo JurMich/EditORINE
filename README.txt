@@ -113,7 +113,7 @@ Then include these files into the page:
 -	"NORditor_layout_specific.js"
 -	"NORditor_main_visualizator.js"
 
-Fianlly call this function in your script: 
+Finally call this function in your script: 
 
 visualizeMonomer(NOR, divID, svgID);
 
