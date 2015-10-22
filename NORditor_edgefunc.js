@@ -31,6 +31,7 @@ function endEdgeMode(menuAtts, allMonomerLists, graphicAtt, interfaceElem)
  // restore original enclick event of svg - creating new monomer
  svg.onclick = function(event)
  {
+  menuAtts.dragged = false;	 
   svgClickHandler(event, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
  }
 
