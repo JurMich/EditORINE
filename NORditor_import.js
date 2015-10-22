@@ -589,7 +589,7 @@ function plotGraph(nodeCoordinates, menuAtts, allMonomerLists, graphicAtt, inter
 */
 function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem, colorList)
 {
- if(NORmat != interfaceElem.resultString)
+ if(NORmat != interfaceElem.outputField.value)
  {	
   // reset all lists
   allMonomerLists.nodeNum = 0;
