@@ -39,8 +39,8 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   var interfaceElem = {};
   // contains list of colors
   var colorList = {};
-  // properties used by deterministic layouts
-  var specLayout = {};
+  // parameters du to resizing of layouts
+  var resLayout = {};
  
   // pass svg and parent div IDs to object
   interfaceElem.svgId = svgId;
@@ -76,16 +76,16 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   
    /* maximum values of monomers in single line for linear monomers
    number of monomers in cycle from which it doesnt become bigger*/
-  specLayout.maxPerLine = 4;
-  specLayout.minInBiggestCycle = 5; 
+  resLayout.maxPerLine = 4;
+  resLayout.minInBiggestCycle = 5; 
  
   // vertical jump between monomers when linear one is drawn
-  specLayout.horizontalLimit = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(specLayout.maxPerLine-1));  
-  specLayout.verticalLimit = 100;  
+  resLayout.horizontalLimit = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(resLayout.maxPerLine-1));  
+  resLayout.verticalLimit = 100;  
   
   // back up values for visualizer resizing
-  specLayout.svgWidth = graphicAtt.svgWidth;
-  specLayout.svgHeight = graphicAtt.svgHeight;
+  resLayout.svgWidth = graphicAtt.svgWidth;
+  resLayout.svgHeight = graphicAtt.svgHeight;
 
   // color of next drawn monomer
   graphicAtt.color = [];	
@@ -274,7 +274,7 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   interfaceElem.outputField.setAttribute('type', 'text');		
   interfaceElem.outputField.setAttribute('size', '40');
   interfaceElem.outputField.style.cssText = 'font-size:12px;';
-  confirmButton.innerHTML = 'OK';
+  confirmButton.innerHTML = 'Close';
   confirmButton.setAttribute('type', 'button');
   confirmButton.onclick = function(){
    var finalNOR = interfaceElem.outputField.value;
@@ -323,7 +323,7 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   refreshButton.setAttribute('type', 'button');
   refreshButton.onclick = function()
   {
-   draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem);
+   draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem);
   };
   refreshDiv.appendChild(refreshButton);
   var resetButton = document.createElement('button');	// button which starts import action
@@ -345,7 +345,7 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   openEditorButton.onclick = function()
   {
    parentDiv.style.display ='block';
-   importGraph(exterNORField, exterNORField.value, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem, colorList);
+   importGraph(exterNORField, exterNORField.value, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem, colorList);
   };
  
   // adds button to save current image

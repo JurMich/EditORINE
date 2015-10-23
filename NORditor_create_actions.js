@@ -19,7 +19,7 @@ function svgClickHandler(event, menuAtts, allMonomerLists, graphicAtt, interface
 {
  if(menuAtts.activeMonomer != '')
  {
-  if(msieversion()==0)
+  if((msieversion()==0)||(msieversion()>11))
   {
    cursorX = event.pageX - $('#'+interfaceElem.parentDivId+' .svg_window').offset().left;
    cursorY = event.pageY - $('#'+interfaceElem.parentDivId+' .svg_window').offset().top;

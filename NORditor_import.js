@@ -583,11 +583,11 @@ function plotGraph(nodeCoordinates, menuAtts, allMonomerLists, graphicAtt, inter
  - menuAtts : properties of menu (currently selected monomer etc.)
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
- - specLayout : attributes used for deterministic layout computation
+ - resLayout : attributes used for deterministic layout computation
  - interfaceElem : variables/objects of interface such as id of svg or input fields
  - colorList : list of monomer <-> color associations
 */
-function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem, colorList)
+function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem, colorList)
 {
  if(NORmat != interfaceElem.outputField.value)
  {	
@@ -600,7 +600,7 @@ function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists
   // import NOR
   NORImport(NORmat, allMonomerLists, externField, colorList);
   // import NOR
-  draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem);
+  draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem);
  }
 }
 
@@ -609,14 +609,14 @@ function importGraph(externField, NORmat, gLayoutAtts, menuAtts, allMonomerLists
  - menuAtts : properties of menu (currently selected monomer etc.)
  - allMonomerLists : lists containing information  about each monomer of peptide chains
  - graphicAtt : object containing all graphical parameters
- - specLayout : attributes used for deterministic layout computation
+ - resLayout : attributes used for deterministic layout computation
  - interfaceElem : variables/objects of interface such as id of svg or input fields
 Note: this function is called by an event directly thus cannot have attributes.
 Graphical attributes are thus passed in 'NORditor_main' as global variables. You can
 set them there.
 */
 
-function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem)
+function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem)
 {
 // var t0 = performance.now();
  // removes all graphics from layers
@@ -628,30 +628,34 @@ function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, in
  {
   if(graphicAtt.editor == 'on')
   {	 
-   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'no');
+   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, resLayout, interfaceElem.svgId, 'no');
   }
   else
   {
-   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'no');  
+   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, resLayout, interfaceElem.svgId, 'no');  
   }
  }
  else if(peptideType == 'linear')
  {
   if(graphicAtt.editor == 'on')
   {	 
-   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'yes');
+   nodeCoordinates =  computeNodesLNEEditor(allMonomerLists, graphicAtt, resLayout, interfaceElem.svgId, 'yes');
   }
   else
   {
-   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId, 'yes');  
+   nodeCoordinates =  computeNodesLNEVis(allMonomerLists, graphicAtt, resLayout, interfaceElem.svgId, 'yes');  
   }
  }
  else if(peptideType == 'single cycle')
  { 	 
-  nodeCoordinates =  computeNodesCycle(allMonomerLists, graphicAtt, specLayout, interfaceElem.svgId);
+  nodeCoordinates =  computeNodesCycle(allMonomerLists, graphicAtt, resLayout, interfaceElem.svgId);
  }
  else if(peptideType == 'other')
  {
+  if(graphicAtt.editor == 'off')
+  {
+   	  
+  }	 
   var graphGood = false;
   var bestActualSample;
   var leastIntersect = null;

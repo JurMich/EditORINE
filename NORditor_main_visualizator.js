@@ -32,8 +32,8 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   var interfaceElem = {};
   // contains list of colors
   var colorList = {};
-  // properties used by deterministic layouts
-  var specLayout = {};
+  // parameters du to resizing of layouts
+  var resLayout = {};
  
   var exterNORField = '';
   interfaceElem.outputField = '';
@@ -67,16 +67,16 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   
   /* maximum values of monomers in single line for linear monomers
   number of monomers in cycle from which it doesnt become bigger*/
-  specLayout.maxPerLine = 4;
-  specLayout.minInBiggestCycle = 5; 
+  resLayout.maxPerLine = 4;
+  resLayout.minInBiggestCycle = 5; 
  
   // vertical jump between monomers when linear one is drawn
-  specLayout.horizontalLimit = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(specLayout.maxPerLine-1));  
-  specLayout.verticalLimit = 100;  
+  resLayout.horizontalLimit = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(resLayout.maxPerLine-1));  
+  resLayout.verticalLimit = 100;  
   
   // back up values for visualizer resizing
-  specLayout.svgWidth = graphicAtt.svgWidth;
-  specLayout.svgHeight = graphicAtt.svgHeight;
+  resLayout.svgWidth = graphicAtt.svgWidth;
+  resLayout.svgHeight = graphicAtt.svgHeight;
 
   // linklist is  similar to NOR format (list of lists, each of whom contains links)		
   allMonomerLists.monomerList = [];        // enlists all monomers by name
@@ -128,7 +128,7 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   d3.json('monomers.json', function(jsonContents)
   {
    addColor(jsonContents, colorList);
-   importGraph(exterNORField, peptideNOR, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem, colorList);
+   importGraph(exterNORField, peptideNOR, gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem, colorList);
   });
   
   var breakLine = document.createElement('br');
@@ -138,7 +138,7 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   redrawButton.innerHTML = 'Redraw';
   redrawButton.setAttribute('type', 'button');
   redrawButton.onclick = function(){
-   draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, specLayout, interfaceElem);
+   draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, interfaceElem);
   };
   parentDiv.appendChild(redrawButton);
   var outputButton = document.createElement('button');
