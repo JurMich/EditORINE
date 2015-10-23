@@ -63,6 +63,11 @@ function makeMonomerAtCoordinates(cursorX, cursorY, menuAtts, allMonomerLists, g
   interfaceElem.activeMonomerField.value = '';
   graphicAtt.color = [];
  }
+ else
+ {
+  // refresh from monomer list in case drag was used	 
+  menuAtts.activeMonomer = monomerList2Str(menuAtts.activeMonomersList);	 
+ }
 }
 
 /* updates lists and draws monomers with associated events
@@ -80,15 +85,10 @@ function addMonomer(cursorX, cursorY, menuAtts, allMonomerLists, graphicAtt, int
  allMonomerLists.edgeList.push([]);		// placeholder for list of edges
  // update text field
  graphToNOR(allMonomerLists, interfaceElem.outputField,interfaceElem.exterNORField);
-
  // obtain list of colors which will be used
- var colorPalette = menuAtts.dragged ? [graphicAtt.colorDragged] : graphicAtt.color;
- allMonomerLists.color.push([]);
- // prevent pointer copying
- for(var i=0; i<colorPalette.length; i++)
- {
-  allMonomerLists.color[allMonomerLists.color.length-1][i] = colorPalette[i];
- }	
+ var colorPalette = graphicAtt.color.slice(); // prevent pointer copying
+ if(menuAtts.dragged && (graphicAtt.colorDragged!= '')) colorPalette.push(graphicAtt.colorDragged);
+ allMonomerLists.color.push(colorPalette);
  var monomer = createMonomerBase(cursorX, cursorY, menuAtts.activeMonomer, allMonomerLists, graphicAtt, interfaceElem.svgId);
  
  createMonomerActions(monomer, menuAtts, allMonomerLists, graphicAtt, interfaceElem);

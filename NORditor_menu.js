@@ -56,8 +56,16 @@ function createMenu(nodes, menuAtts, allMonomerLists, graphicAtt, interfaceElem,
  // drag for elements
  p.ondragstart = function(event){
   menuAtts.dragged = true;
-  graphicAtt.colorDragged = d3.select(this).select('.color_marker').style('color');
-  event.dataTransfer.setData('text', interfaceElem.svgId+' '+p.id);
+  // add monomer only if not in list already
+  var temporaryActiveMonos = menuAtts.activeMonomer;
+  var copiedActiveMonoList = menuAtts.activeMonomersList.slice();
+  if(copiedActiveMonoList.indexOf(p.id) == -1)
+  {
+   graphicAtt.colorDragged = d3.select(this).select('.color_marker').style('color');
+   copiedActiveMonoList.push(p.id);
+   temporaryActiveMonos = monomerList2Str(copiedActiveMonoList);
+  }
+  event.dataTransfer.setData('text', interfaceElem.svgId+' '+temporaryActiveMonos);
  };
  p.display = 'block'
  li.appendChild(p);
@@ -135,8 +143,16 @@ function parseNode(node, level, menuAtts, allMonomerLists, graphicAtt, interface
  p.id = node.name;
  p.ondragstart = function(event){
   menuAtts.dragged = true;
-  graphicAtt.colorDragged = d3.select(this).select('.color_marker').style('color');
-  event.dataTransfer.setData('text', interfaceElem.svgId+' '+p.id);
+  // add monomer only if not in list already
+  var temporaryActiveMonos = menuAtts.activeMonomer;
+  var copiedActiveMonoList = menuAtts.activeMonomersList.slice();
+  if(copiedActiveMonoList.indexOf(p.id) == -1)
+  {
+   graphicAtt.colorDragged = d3.select(this).select('.color_marker').style('color');
+   copiedActiveMonoList.push(p.id);
+   temporaryActiveMonos = monomerList2Str(copiedActiveMonoList);
+  }
+  event.dataTransfer.setData('text', interfaceElem.svgId+' '+temporaryActiveMonos);
  };
  p.style.cursor = 'default';
  p.display = 'block'

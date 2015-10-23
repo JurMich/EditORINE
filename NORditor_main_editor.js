@@ -87,8 +87,8 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   resLayout.svgHeight = graphicAtt.svgHeight;
 
   // color of next drawn monomer
-  graphicAtt.color = [];	
-  graphicAtt.colorDragged = 'black';
+  graphicAtt.color = [];
+  graphicAtt.colorDragged = '';	
 
   // linklist is  similar to NOR format (list of lists, each of whom contains links)		
   allMonomerLists.monomerList = [];        // enlists all monomers by name
@@ -229,7 +229,8 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
    {
     menuAtts.activeMonomer = transferred[1];
     svgClickHandler(event, menuAtts, allMonomerLists, graphicAtt, interfaceElem);
-   } 
+   }
+   graphicAtt.colorDragged = ''; 
   }
 
   // create svg (main window of editor)
