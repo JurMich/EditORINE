@@ -74,10 +74,9 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   graphicAtt.paddingX = (graphicAtt.rectMainWidth/2 + 15);
   graphicAtt.paddingY = (graphicAtt.rectMainHeight/2 + 15);
   
-   /* maximum values of monomers in single line for linear monomers
-   number of monomers in cycle from which it doesnt become bigger*/
-  resLayout.maxPerLine = 4;
-  resLayout.minInBiggestCycle = 5; 
+  // different values used to determine when to resize image
+  resLayout.maxPerLine = 4; // max count of monomers per line in linear peptide
+  resLayout.minInBiggestCycle = 5; // min monomer count for cycle to be biggest (peak value)
  
   // vertical jump between monomers when linear one is drawn
   resLayout.horizontalLimit = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(resLayout.maxPerLine-1));  

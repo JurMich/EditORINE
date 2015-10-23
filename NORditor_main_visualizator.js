@@ -72,7 +72,9 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
  
   // vertical jump between monomers when linear one is drawn
   resLayout.horizontalLimit = parseInt((graphicAtt.svgWidth-graphicAtt.paddingX*2)/(resLayout.maxPerLine-1));  
-  resLayout.verticalLimit = 100;  
+  resLayout.verticalLimit = 100; 
+  resLayout.minXOther = 100; // min X for other types of peptides
+  resLayout.minYOther = 100; // min Y for other types of peptides 
   
   // back up values for visualizer resizing
   resLayout.svgWidth = graphicAtt.svgWidth;
