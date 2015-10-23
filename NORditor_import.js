@@ -655,9 +655,9 @@ function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, int
   // resize image if few monomers are used	 
   if(graphicAtt.editor == 'off')
   {
-   graphicAtt.svgWidth = resLayout.minXOther + allMonomerLists.monomerList.length*50; 
+   graphicAtt.svgWidth = resLayout.minXOther + allMonomerLists.monomerList.length*60; 
    graphicAtt.svgHeight = resLayout.minYOther + allMonomerLists.monomerList.length*50;
-   if(graphicAtt.svgWidth>500)  graphicAtt.svgWidth=500;
+   if(graphicAtt.svgWidth>700)  graphicAtt.svgWidth=700;
    if(graphicAtt.svgHeight>500)  graphicAtt.svgHeight=500;
    // change svg dimensions 
    document.getElementById(interfaceElem.svgId)
