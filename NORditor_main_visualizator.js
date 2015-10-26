@@ -31,7 +31,8 @@ function visualizeMonomer(peptideNOR, parentDivId, svgId)
   // contains interface elements
   var interfaceElem = {};
   // contains list of colors
-  var colorList = {};
+  var colorList = {'Unclustered':'hsl(308, 100%, 40%)'};
+  console.log(colorList);
   // parameters du to resizing of layouts
   var resLayout = {};
  

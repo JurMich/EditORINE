@@ -22,6 +22,7 @@ NB: NOR has following "containers" separated by @:
 
 function NORImport(NORmat, allMonomerLists, externField, colorList)
 {
+ console.log('importing now');	
  if(NORmat!='')
  {
   if(NORmat.indexOf('@') == -1)

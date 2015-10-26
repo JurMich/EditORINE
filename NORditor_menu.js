@@ -137,10 +137,15 @@ function parseNode(node, level, menuAtts, allMonomerLists, graphicAtt, interface
  // creates li element(s) of ul list
  var li = document.createElement('LI');
  var p = document.createElement('P');
+ p.id = node.name;
+ if(node.name=="Unclustered")
+ {
+  node.color = 'hsl(308, 100%, 40%)'	 
+ }
  p.innerHTML = '<span class=\'color_marker\' style=\'color:'+node.color+';\'>&#x25B2;</span> ' + node.name;
+ colorList[p.id] = node.color;
  p.className = 'editor_menuItem';
  p.draggable = true;
- p.id = node.name;
  p.ondragstart = function(event){
   menuAtts.dragged = true;
   // add monomer only if not in list already
@@ -157,8 +162,6 @@ function parseNode(node, level, menuAtts, allMonomerLists, graphicAtt, interface
  p.style.cursor = 'default';
  p.display = 'block'
  p.style.cssText = 'padding-left:' + (level*10) + 'px';
- p.id = node.name;
- colorList[p.id] = node.color;
  li.appendChild(p);	
  level++;
 
@@ -312,7 +315,7 @@ function searchMonomers(interfaceElem)
   d3.select('#'+interfaceElem.parentDivId).selectAll('p.editor_menuItemSelected').style('display', 'block');	  
  }
  else
- {
+ {	 
   var searchedValueReg = interfaceElem.searchField.value.replace(/(?=[\/\\^$*+?.()|{}[\]])/g, "\\");
   searchedValueReg = new RegExp(searchedValueReg, 'i'); 
   d3.select('#'+interfaceElem.parentDivId).selectAll('p.editor_menuItem').each(function(){	  
