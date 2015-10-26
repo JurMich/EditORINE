@@ -150,12 +150,13 @@ Then include these files into the page:
 
 Finally call this function in your script: 
 
-runNOREditor(inputID, buttonID, divID, svgID);
+runNOREditor(inputID, buttonID, divID, svgID, display);
 
 with inputID being the ID of field showing the result outside of editor,
 buttonID being the identifier of button opening the editor, divID the ID
 of div created and svgID is an ID that the svg will have once created 
-(just pass unique string; svg is created by the function). 
+(just pass unique string; svg is created by the function) and 'display'
+a display property of divID ('block', 'none'...). 
 
  #--------------#
  | 5.) Contact /

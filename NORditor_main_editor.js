@@ -14,9 +14,10 @@
  - openEditorButton : ID of the button which redraws editor. Will associate an action to it
  - parentDivId : ID of the parent div which will hold editor
  - svgID : ID which svg will have
+ - state : shows if window should be opened or closed by default
 */
 
-function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
+function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId, state)
 {
  // verify support of svg
  if(typeof SVGRect != "undefined")
@@ -152,7 +153,7 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
   d3.json('monomers.json', function(jsonContents)
   {	  
    constructEditorInterface(jsonContents, menuAtts, gLayoutAtts, allMonomerLists, 
-    graphicAtt, resLayout, interfaceElem, colorList, openEditorButton);
+    graphicAtt, resLayout, interfaceElem, colorList, openEditorButton, state);
  
   });
  }
@@ -171,10 +172,10 @@ function runNOREditor(exterNORFieldId, openEditorButtonId, parentDivId, svgId)
  */
 
 function constructEditorInterface(jsonContents, menuAtts, gLayoutAtts, allMonomerLists, 
- graphicAtt, resLayout, interfaceElem, colorList, openEditorButton)
+ graphicAtt, resLayout, interfaceElem, colorList, openEditorButton, state)
 {
  var parentDiv = document.getElementById(interfaceElem.parentDivId);
- parentDiv.style.display='none';
+ parentDiv.style.display=state;
  	
 	
  // contains all elements of editor
