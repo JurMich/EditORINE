@@ -175,9 +175,12 @@ function constructEditorInterface(jsonContents, menuAtts, gLayoutAtts, allMonome
  graphicAtt, resLayout, interfaceElem, colorList, openEditorButton, state)
 {
  var parentDiv = document.getElementById(interfaceElem.parentDivId);
+ if(state == undefined)
+ {
+  state = 'none';  // default value	 
+ }
  parentDiv.style.display=state;
  	
-	
  // contains all elements of editor
  var container = document.createElement('div');
  container.className = 'editor_container';

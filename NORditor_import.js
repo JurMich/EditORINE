@@ -22,7 +22,6 @@ NB: NOR has following "containers" separated by @:
 
 function NORImport(NORmat, allMonomerLists, externField, colorList)
 {
- console.log('importing now');	
  if(NORmat!='')
  {
   if(NORmat.indexOf('@') == -1)
@@ -100,18 +99,6 @@ function NORImport(NORmat, allMonomerLists, externField, colorList)
   }
   allMonomerLists.nodeNum = allMonomerLists.monomerList.length - 1;
  }
-}
-
-/* resets all lists
- - allMonomerLists : lists containing peptide chains
-*/
-function resetLists(allMonomerLists)
-{
- allMonomerLists.monomerList = [];
- allMonomerLists.indexList = [];
- allMonomerLists.edgeList = [];
- allMonomerLists.color = [];
- allMonomerLists.nodeNum=0;
 }
 
 /* randomly position every node at beginning
@@ -501,42 +488,86 @@ function computeDistanceQuality(nodeCoordinates)
 /* identifies specific cases of peptides based on degree
  of every vertex/node. Takes nothing as argument, returns
  type of graph 
- - allMonomerLists : lists containing peptide chains
+ - allMonomerLists : lists containing information  about each monomer of peptide chains
 */
 function getPeptideType(allMonomerLists)
 {
- /*stores nnumber of degree vertices
- nodeDegrees[0] - numbers of 0 degree vertexes
- nodeDegrees[1] - numbers of 1 degree vertexes
- nodeDegrees[2] - numbers of 2 degree vertexes
- nodeDegrees[3] - numbers of 3 degree vertexes
- */
- var nodeDegrees = [0,0,0,0];
- for(var i=0; i<allMonomerLists.edgeList.length; i++)
+ // start by determining number of connected components (uses DFS)
+ var status = []; // 0 - node undiscovered, 1 - node discovered
+ for(var i=0; i<allMonomerLists.monomerList.length; i++)
  {
-  // removing duplicates if double bounds are present
-  var uniqueEdgeEnds = findDuplicates(allMonomerLists.edgeList[i])[0]
-  var degree = uniqueEdgeEnds.length;
-  if(degree<4){
-   nodeDegrees[degree] += 1; 
+  status[i] = 0;	 
+ }
+ var nConnectedComponents = 0;
+ while(status.indexOf(0)!=-1)
+ {	
+  nConnectedComponents++;	 
+  console.log(status); 
+  var node = status.indexOf(0);	 
+  // initialize and run DFS
+  depth_first_search(node, allMonomerLists, status);
+ }
+ // if there is single connected component look if specific case is present
+ if(nConnectedComponents==1)
+ {	
+  /*stores nnumber of degree vertices
+  nodeDegrees[0] - numbers of 0 degree vertexes
+  nodeDegrees[1] - numbers of 1 degree vertexes
+  nodeDegrees[2] - numbers of 2 degree vertexes
+  nodeDegrees[3] - numbers of 3 degree vertexes
+  */
+  var nodeDegrees = [0,0,0,0];
+  for(var i=0; i<allMonomerLists.edgeList.length; i++)
+  {
+   // removing duplicates if double bounds are present
+   var uniqueEdgeEnds = findDuplicates(allMonomerLists.edgeList[i])[0]
+   var degree = uniqueEdgeEnds.length;
+   if(degree<4){
+    nodeDegrees[degree] += 1; 
+   }
+  }
+  // detect cases
+  if((nodeDegrees[0] == allMonomerLists.edgeList.length))
+  {
+   return 'no edge';
+  }
+  else if((nodeDegrees[1] == 2) && (nodeDegrees[2] == (allMonomerLists.edgeList.length - 2)))
+  { 
+   return 'linear';
+  }
+  else if(nodeDegrees[2] == (allMonomerLists.edgeList.length))
+  {
+   return 'single cycle';
+  }
+  else
+  {
+   return 'other'; 
   }
  }
- // detect cases
- if((nodeDegrees[0] == allMonomerLists.edgeList.length))
- {
-  return 'no edge';
- }
- else if((nodeDegrees[1] == 2) && (nodeDegrees[2] == (allMonomerLists.edgeList.length - 2)))
- {
-  return 'linear';
- }
- else if(nodeDegrees[2] == (allMonomerLists.edgeList.length))
- {
-  return 'single cycle';
- }
+ // if 2 or more connected components
  else
  {
-  return 'other'; 
+  return 'other';  
+ }
+}
+
+/* starts DFS from node to discover connected components
+ - node : node from which start DFS
+ - allMonomerLists : lists containing information  about each monomer of peptide chains
+ - status : list of current discovered/undiscovered status
+ */
+function depth_first_search(node, allMonomerLists, status)
+{	
+ status[node] = 1;
+ for(var ed=0; ed<allMonomerLists.edgeList[node].length; ed++)
+ {
+  var nodeNext = allMonomerLists.indexList.indexOf(allMonomerLists.edgeList[node][ed]);	 
+  // if node wasn't discovered yet recursively do the same
+  if(status[nodeNext] != 1)
+  {  	  
+   console.log(nodeNext);
+   depth_first_search(nodeNext, allMonomerLists, status); 
+  }		
  }
 }
 
@@ -625,6 +656,7 @@ function draw(gLayoutAtts, menuAtts, allMonomerLists, graphicAtt, resLayout, int
  $('#'+interfaceElem.svgId + ' .nodeLayer').empty();
  var nodeCoordinates;
  var peptideType = getPeptideType(allMonomerLists);
+ 	 console.log('a', peptideType );
  if(peptideType == 'no edge')
  {
   if(graphicAtt.editor == 'on')
